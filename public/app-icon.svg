@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="Mama Mona Appointments">
+  <rect width="512" height="512" rx="116" fill="#2f6b62"/>
+  <path fill="#f7f4ee" d="M121 139c0-22 18-40 40-40h190c22 0 40 18 40 40v234c0 22-18 40-40 40H161c-22 0-40-18-40-40V139Z"/>
+  <path fill="#d9966d" d="M121 139c0-22 18-40 40-40h190c22 0 40 18 40 40v62H121v-62Z"/>
+  <rect x="178" y="72" width="30" height="80" rx="15" fill="#183d38"/>
+  <rect x="304" y="72" width="30" height="80" rx="15" fill="#183d38"/>
+  <path fill="#2f6b62" d="M256 240c15-22 51-14 51 17 0 36-51 66-51 66s-51-30-51-66c0-31 36-39 51-17Z"/>
+</svg>

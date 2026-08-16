@@ -1,0 +1,20 @@
+# Dependencies and builds
+node_modules/
+dist/
+*.tsbuildinfo
+
+# Local environment and secrets
+.env
+.env.*
+!.env.example
+
+# Logs and editor files
+*.log
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Local Supabase tooling
+.supabase/
+supabase/.temp/
