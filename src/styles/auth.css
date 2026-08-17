@@ -1,0 +1,16 @@
+.auth-page { width: min(100% - 32px, 520px); min-height: 100vh; padding: max(40px, env(safe-area-inset-top)) 0 max(40px, env(safe-area-inset-bottom)); display: grid; place-items: center; }
+.auth-card { width: 100%; border: 1px solid var(--border); border-radius: 30px; background: var(--surface); box-shadow: var(--shadow); padding: clamp(26px, 7vw, 42px); text-align: center; }
+.auth-card h1 { font-size: clamp(2.2rem, 10vw, 3.2rem); }
+.auth-mark { width: 58px; height: 58px; margin: 0 auto 22px; border-radius: 19px; display: grid; place-items: center; background: var(--accent); color: white; font-size: 24px; box-shadow: 0 10px 25px rgba(47,107,98,.24); }
+.auth-mark svg { width: 26px; height: 26px; }
+.auth-intro { color: var(--muted); margin: 0 auto 25px; max-width: 360px; }
+.auth-form { text-align: left; }
+.auth-help { color: var(--muted); font-size: 13px; margin: 20px 0 0; }
+.auth-loading p { color: var(--muted); margin-bottom: 0; }
+.contact-sections { display: grid; gap: 30px; }
+.contact-section > h2 { color: var(--muted); font-size: 14px; letter-spacing: .08em; text-transform: uppercase; margin-bottom: 12px; }
+.doctor-info h3 { margin: 0 0 2px; font-size: 19px; }
+.account-signout { margin-top: 20px; }
+.calendar-grid button.has-appointment:not(.selected) { background: #e2f1eb; color: var(--accent-dark); }
+.calendar-grid button.has-appointment i { background: var(--accent); }
+.legend-dot.appointment { background: #d5ebe2; border-color: var(--accent); }

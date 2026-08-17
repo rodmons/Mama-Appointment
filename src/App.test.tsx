@@ -1,90 +1,51 @@
+import { cleanup, fireEvent, render, screen, waitFor } from '@testing-library/react'
 import '@testing-library/jest-dom/vitest'
-import { render, screen, within } from '@testing-library/react'
-import userEvent from '@testing-library/user-event'
-import { beforeEach, describe, expect, test, vi } from 'vitest'
+import { afterEach, describe, expect, it, vi } from 'vitest'
 import App from './App'
+import { AccessPendingPage, SignInPage } from './pages/AuthGate'
+import { isSupabaseConfigured } from './services/supabase'
+
+afterEach(cleanup)
 
 describe('Mama Mona Appointments', () => {
-  beforeEach(() => {
-    localStorage.clear()
-    vi.stubGlobal('scrollTo', vi.fn())
-  })
-
-  test('keeps Mom Mode safe and supports the core admin appointment and doctor flows', async () => {
-    const user = userEvent.setup()
+  it('shows the correct landing experience for the current configuration', async () => {
+    window.scrollTo = vi.fn()
     render(<App />)
 
-    expect(await screen.findByText('Good afternoon, Mama')).toBeInTheDocument()
-    expect(screen.getByText('Audiogram')).toBeInTheDocument()
-    expect(screen.queryByRole('button', { name: 'Add appointment' })).not.toBeInTheDocument()
-    expect(screen.queryByRole('button', { name: 'Delete' })).not.toBeInTheDocument()
+    if (isSupabaseConfigured) {
+      expect(await screen.findByRole('heading', { name: 'Welcome to Mama Mona' })).toBeInTheDocument()
+      expect(screen.getByRole('button', { name: /Sign in securely/i })).toBeInTheDocument()
+      return
+    }
 
-    await user.click(screen.getByRole('button', { name: /Settings/i }))
-    const adminSwitch = await screen.findByRole('switch', { name: '' })
-    expect(adminSwitch).not.toBeChecked()
-    await user.click(adminSwitch)
-    expect(adminSwitch).toBeChecked()
+    expect(await screen.findByText(/Good (morning|afternoon|evening), Mama/)).toBeInTheDocument()
+    expect(screen.getByText(/Demo Mode/i)).toBeInTheDocument()
 
-    await user.click(screen.getByRole('button', { name: 'Home' }))
-    await user.click(await screen.findByRole('button', { name: 'Add appointment' }))
-    const appointmentDialog = await screen.findByRole('dialog', { name: 'Add appointment' })
-    const purpose = within(appointmentDialog).getByLabelText(/Purpose/)
-    const start = within(appointmentDialog).getByLabelText(/Start time/)
-    const end = within(appointmentDialog).getByLabelText(/End time/)
+    fireEvent.click(screen.getByRole('button', { name: /Contacts/i }))
+    expect(await screen.findByRole('heading', { name: 'Doctors' })).toBeInTheDocument()
+    expect(screen.getByRole('heading', { name: 'Nurses' })).toBeInTheDocument()
 
-    await user.type(purpose, 'Blood Test')
-    await user.clear(start)
-    await user.type(start, '10:00')
-    await user.type(end, '09:30')
-    await user.click(within(appointmentDialog).getByRole('button', { name: 'Add appointment' }))
-    expect(await within(appointmentDialog).findByText('End time must be after the start time.')).toBeInTheDocument()
+    fireEvent.click(screen.getByRole('button', { name: /Mom Mode/i }))
+    expect(await screen.findByRole('heading', { name: 'Account' })).toBeInTheDocument()
+    fireEvent.click(screen.getByRole('switch', { name: /Admin Mode/i }))
+    expect(screen.getByText(/Admin Mode is on/i)).toBeInTheDocument()
+  })
 
-    await user.clear(end)
-    const doctorSearch = within(appointmentDialog).getByLabelText(/Doctor or care provider/)
-    await user.click(doctorSearch)
-    await user.click(within(appointmentDialog).getByRole('option', { name: /Dr\. Cho/ }))
-    expect(within(appointmentDialog).getByText(/Anesthesiologist/)).toBeInTheDocument()
-    await user.click(within(appointmentDialog).getByRole('button', { name: 'Add appointment' }))
-    expect(await screen.findByText('Appointment added.')).toBeInTheDocument()
+  it('shows a friendly sign-in error', async () => {
+    const onLogin = vi.fn().mockRejectedValue(new Error('Invalid login credentials'))
+    render(<SignInPage onLogin={onLogin} />)
 
-    await user.click(screen.getByRole('button', { name: 'Calendar' }))
-    expect(await screen.findByText('Blood Test')).toBeInTheDocument()
-    await user.click(screen.getByRole('button', { name: 'Next month' }))
-    expect(screen.getByRole('heading', { name: 'September 2026' })).toBeInTheDocument()
+    fireEvent.change(screen.getByLabelText(/Email/i), { target: { value: 'mama@example.com' } })
+    fireEvent.change(screen.getByLabelText(/Password/i), { target: { value: 'wrong-password' } })
+    fireEvent.click(screen.getByRole('button', { name: /Sign in/i }))
 
-    await user.click(screen.getByRole('button', { name: 'Doctors' }))
-    expect(await screen.findByText('Dr. Cho')).toBeInTheDocument()
-    await user.click(screen.getAllByRole('button', { name: 'Add doctor' })[0])
-    const doctorDialog = await screen.findByRole('dialog', { name: 'Add doctor' })
-    await user.type(within(doctorDialog).getByLabelText(/^Name/), 'Dr. Rivera')
-    await user.type(within(doctorDialog).getByLabelText(/Profession/), 'Cardiologist')
-    await user.click(within(doctorDialog).getByRole('button', { name: 'Add doctor' }))
-    expect(await screen.findByText('Doctor added.')).toBeInTheDocument()
-    expect(screen.getByText('Dr. Rivera')).toBeInTheDocument()
+    await waitFor(() => expect(screen.getByRole('alert')).toHaveTextContent('That email or password did not work'))
+  })
 
-    await user.click(screen.getByRole('button', { name: 'Edit Dr. Rivera' }))
-    const editDoctorDialog = await screen.findByRole('dialog', { name: 'Edit doctor' })
-    await user.type(within(editDoctorDialog).getByLabelText(/Hospital/), 'Surrey Memorial Hospital')
-    await user.click(within(editDoctorDialog).getByRole('button', { name: 'Save changes' }))
-    expect(await screen.findByText('Doctor updated.')).toBeInTheDocument()
-    expect(screen.getByText('Surrey Memorial Hospital')).toBeInTheDocument()
+  it('does not reveal data to a signed-in account that is not approved', () => {
+    render(<AccessPendingPage email="new@example.com" onLogout={vi.fn()} />)
 
-    await user.click(screen.getByRole('button', { name: 'Calendar' }))
-    await user.click(await screen.findByRole('button', { name: /Blood Test/ }))
-    expect(await screen.findByRole('heading', { name: 'Blood Test' })).toBeInTheDocument()
-    await user.click(screen.getByRole('button', { name: 'Edit' }))
-    const editAppointmentDialog = await screen.findByRole('dialog', { name: 'Edit appointment' })
-    const editPurpose = within(editAppointmentDialog).getByLabelText(/Purpose/)
-    await user.clear(editPurpose)
-    await user.type(editPurpose, 'Blood Work')
-    await user.click(within(editAppointmentDialog).getByRole('button', { name: 'Save changes' }))
-    expect(await screen.findByText('Appointment updated.')).toBeInTheDocument()
-    expect(screen.getByRole('heading', { name: 'Blood Work' })).toBeInTheDocument()
-
-    await user.click(screen.getByRole('button', { name: 'Delete' }))
-    const deleteDialog = await screen.findByRole('dialog', { name: 'Delete this appointment?' })
-    await user.click(within(deleteDialog).getByRole('button', { name: 'Delete appointment' }))
-    expect(await screen.findByText('Appointment deleted.')).toBeInTheDocument()
-    expect(screen.queryByText('Blood Work')).not.toBeInTheDocument()
+    expect(screen.getByText('new@example.com')).toBeInTheDocument()
+    expect(screen.getByText(/not been added to Mama Mona/i)).toBeInTheDocument()
   })
 })

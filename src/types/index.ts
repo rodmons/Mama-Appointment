@@ -1,10 +1,13 @@
 export type AppointmentStatus = 'confirmed' | 'tentative' | 'cancelled' | 'completed'
+export type ContactType = 'doctor' | 'nurse' | 'clinic' | 'hospital' | 'pharmacy' | 'personal' | 'transportation' | 'other'
+export type AppRole = 'viewer' | 'admin'
 
-export interface Doctor {
+export interface Contact {
   id: string
   name: string
-  specialty: string
-  hospital: string
+  contactType: ContactType
+  roleOrSpecialty: string
+  organization: string
   phone: string
   notes: string
   createdAt: string
@@ -17,7 +20,7 @@ export interface Appointment {
   startTime: string
   endTime: string
   purpose: string
-  doctorId: string
+  contactId: string
   locationName: string
   address: string
   phone: string
@@ -29,6 +32,6 @@ export interface Appointment {
   updatedAt: string
 }
 
-export type AppView = 'home' | 'calendar' | 'doctors' | 'settings' | 'details'
+export type AppView = 'home' | 'calendar' | 'contacts' | 'settings' | 'details'
 export type AppointmentDraft = Omit<Appointment, 'id' | 'createdAt' | 'updatedAt'>
-export type DoctorDraft = Omit<Doctor, 'id' | 'createdAt' | 'updatedAt'>
+export type ContactDraft = Omit<Contact, 'id' | 'createdAt' | 'updatedAt'>
