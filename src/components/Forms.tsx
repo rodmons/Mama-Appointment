@@ -99,6 +99,6 @@ export function AppointmentForm({ appointment, contacts, prefilledDate, onSave, 
   </form>
 }
 
-export function ConfirmDialog({ title, message, confirmLabel, danger = false, onConfirm, onCancel }: { title: string; message: string; confirmLabel: string; danger?: boolean; onConfirm: () => void; onCancel: () => void }) {
-  return <Modal title={title} onClose={onCancel}><p className="confirm-message">{message}</p><div className="form-actions"><button className="button secondary" type="button" onClick={onCancel}>Keep appointment</button><button className={`button ${danger ? 'danger' : 'primary'}`} type="button" onClick={onConfirm}>{confirmLabel}</button></div></Modal>
+export function ConfirmDialog({ title, message, confirmLabel, cancelLabel = 'Keep appointment', danger = false, onConfirm, onCancel }: { title: string; message: string; confirmLabel: string; cancelLabel?: string; danger?: boolean; onConfirm: () => void; onCancel: () => void }) {
+  return <Modal title={title} onClose={onCancel}><p className="confirm-message">{message}</p><div className="form-actions"><button className="button secondary" type="button" onClick={onCancel}>{cancelLabel}</button><button className={`button ${danger ? 'danger' : 'primary'}`} type="button" onClick={onConfirm}>{confirmLabel}</button></div></Modal>
 }

@@ -2,16 +2,18 @@ import type { ReactNode } from 'react'
 import type { AppView } from '../types'
 import { Icon } from './Icon'
 
-export function AppHeader({ adminMode, canAdmin, onHome, onSettings }: { adminMode: boolean; canAdmin: boolean; onHome: () => void; onSettings: () => void }) {
+export function AppHeader({ adminMode, canAdmin, onHome, onAdminToggle, onAccount }: { adminMode: boolean; canAdmin: boolean; onHome: () => void; onAdminToggle: () => void; onAccount: () => void }) {
   return <header className="app-header">
     <button className="brand" type="button" aria-label="Go to home" onClick={onHome}>
       <span className="brand-mark"><span>♥</span></span>
       <span><strong>Mama Mona</strong><small>Appointments</small></span>
     </button>
-    <button className={`mode-button ${adminMode ? 'is-admin' : ''}`} type="button" onClick={onSettings}>
-      <Icon name={adminMode ? 'check' : canAdmin ? 'lock' : 'user'} />
-      <span>{adminMode ? 'Admin on' : canAdmin ? 'Mom Mode' : 'Account'}</span>
-    </button>
+    <div className="header-actions">
+      {canAdmin ? <button className={`header-mode-toggle ${adminMode ? 'is-admin' : ''}`} type="button" role="switch" aria-label="Admin Mode" aria-checked={adminMode} onClick={onAdminToggle}>
+        <span className="header-mode-label">Admin Mode</span><span className={`header-switch ${adminMode ? 'on' : ''}`} aria-hidden="true"><span /></span>
+      </button> : <span className="viewer-badge"><Icon name="lock" /><span>View only</span></span>}
+      <button className="header-account" type="button" aria-label="Account" onClick={onAccount}><Icon name="user" /></button>
+    </div>
   </header>
 }
 
