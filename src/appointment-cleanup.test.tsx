@@ -1,4 +1,4 @@
-import { cleanup, render, screen } from '@testing-library/react'
+import { cleanup, fireEvent, render, screen } from '@testing-library/react'
 import '@testing-library/jest-dom/vitest'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import { AppointmentDetail } from './components/AppointmentDetail'
@@ -48,5 +48,36 @@ describe('appointment cleanup', () => {
     expect(screen.getByText('It will stay in the calendar with cancelled label.')).toBeInTheDocument()
     expect(screen.getByRole('button', { name: 'No, keep appointment' })).toBeInTheDocument()
     expect(screen.getByRole('button', { name: 'Yes, Appointment Cancelled' })).toBeInTheDocument()
+  })
+
+  it('shows delete controls for next, upcoming, and previous appointments only in Admin Mode', () => {
+    const nextAppointment = { ...appointment, id: 'next', date: '2099-01-01', purpose: 'Next visit' }
+    const upcomingAppointment = { ...appointment, id: 'upcoming', date: '2099-01-02', purpose: 'Upcoming visit' }
+    const previousAppointment = { ...appointment, id: 'previous', date: '2000-01-01', purpose: 'Previous visit' }
+    const onOpen = vi.fn()
+    const onDelete = vi.fn()
+
+    render(<HomePage appointments={[previousAppointment, upcomingAppointment, nextAppointment]} contacts={[contact]} onOpen={onOpen} adminMode onDelete={onDelete} />)
+
+    expect(screen.getByRole('button', { name: 'Delete Next visit' })).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'Delete Upcoming visit' })).toBeInTheDocument()
+    fireEvent.click(screen.getByText(/Past appointments/i))
+    expect(screen.getByRole('button', { name: 'Delete Previous visit' })).toBeInTheDocument()
+
+    fireEvent.click(screen.getByRole('button', { name: 'Delete Next visit' }))
+    expect(onDelete).toHaveBeenCalledWith(nextAppointment)
+    expect(onOpen).not.toHaveBeenCalled()
+  })
+
+  it('hides appointment delete controls outside Admin Mode', () => {
+    render(<HomePage appointments={[{ ...appointment, date: '2099-01-01' }]} contacts={[contact]} onOpen={vi.fn()} onDelete={vi.fn()} />)
+    expect(screen.queryByRole('button', { name: /Delete Surgery follow up/i })).not.toBeInTheDocument()
+  })
+
+  it('uses clear Yes and No choices for permanent deletion', () => {
+    render(<ConfirmDialog title="Delete appointment?" message="Are you sure you want to permanently delete this appointment?" cancelLabel="No" confirmLabel="Yes, delete" danger onCancel={vi.fn()} onConfirm={vi.fn()} />)
+    expect(screen.getByRole('heading', { name: 'Delete appointment?' })).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'No' })).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'Yes, delete' })).toBeInTheDocument()
   })
 })

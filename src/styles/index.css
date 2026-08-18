@@ -72,6 +72,8 @@ main { width: min(100% - 32px, 780px); margin: 0 auto; padding: 30px 0 48px; }
 .notice-success { background: #e6f3ec; border-color: #c5e0d2; color: #275a46; }
 .notice button { border: 0; padding: 0; background: transparent; color: inherit; font-weight: 800; text-decoration: underline; }
 
+.next-card-shell { position: relative; width: 100%; }
+.next-card-shell .next-card { height: 100%; }
 .next-card { width: 100%; padding: 26px; border: 0; border-radius: 30px; background: linear-gradient(145deg, #356f66 0%, #1f5049 100%); color: white; text-align: left; box-shadow: 0 22px 50px rgba(35,84,77,.22); display: flex; flex-direction: column; position: relative; overflow: hidden; }
 .next-card::after { content: ''; width: 230px; height: 230px; border: 36px solid rgba(255,255,255,.055); border-radius: 50%; position: absolute; top: -115px; right: -95px; }
 .next-date { margin: 23px 0 2px; position: relative; z-index: 1; }
@@ -91,6 +93,13 @@ main { width: min(100% - 32px, 780px); margin: 0 auto; padding: 30px 0 48px; }
 .section-heading > span { border-radius: 999px; background: var(--surface-2); color: var(--muted); font-size: 13px; font-weight: 800; padding: 5px 10px; }
 .card-stack { display: grid; gap: 12px; }
 .card-stack.muted { margin-top: 15px; opacity: .82; }
+.appointment-card-shell { position: relative; width: 100%; }
+.appointment-card-shell.has-delete .appointment-card { padding-right: 52px; }
+.appointment-delete-button { position: absolute; z-index: 3; top: 10px; right: 10px; width: 34px; height: 34px; padding: 0; border: 1px solid #d5d8d6; border-radius: 50%; background: rgba(255,255,255,.92); color: #6f7b78; display: grid; place-items: center; box-shadow: 0 3px 10px rgba(41,67,61,.08); transition: color .18s, background .18s, border-color .18s, transform .18s; }
+.appointment-delete-button svg { width: 17px; }
+.appointment-delete-button:hover, .appointment-delete-button:focus-visible { color: #fff; background: var(--danger); border-color: var(--danger); transform: scale(1.06); }
+.next-card-shell .appointment-delete-button { color: #fff; background: rgba(20,46,42,.34); border-color: rgba(255,255,255,.38); box-shadow: none; }
+.next-card-shell .appointment-delete-button:hover, .next-card-shell .appointment-delete-button:focus-visible { color: #fff; background: #c84545; border-color: #c84545; }
 .appointment-card { width: 100%; display: grid; grid-template-columns: 60px 1fr 22px; align-items: center; gap: 14px; border: 1px solid var(--border); border-radius: 22px; padding: 15px; background: var(--surface); text-align: left; box-shadow: 0 6px 20px rgba(41,67,61,.045); }
 .appointment-card:active { transform: scale(.99); }
 .date-tile { width: 58px; height: 64px; border-radius: 16px; background: var(--accent-soft); color: var(--accent-dark); display: grid; place-content: center; text-align: center; line-height: 1; }
@@ -290,7 +299,7 @@ main { width: min(100% - 32px, 780px); margin: 0 auto; padding: 30px 0 48px; }
 @media (min-width: 900px) {
   .home-page { display: grid; grid-template-columns: 1.05fr .95fr; gap: 32px; align-items: start; }
   .home-page .page-intro { grid-column: 1 / -1; margin-bottom: 0; }
-  .home-page .next-card { grid-column: 1; grid-row: 2 / span 3; }
+  .home-page .next-card-shell { grid-column: 1; grid-row: 2 / span 3; }
   .home-page .content-section { grid-column: 2; grid-row: 2; margin-top: 0; }
   .home-page .history-section { grid-column: 2; grid-row: 3; }
   main { width: min(100% - 48px, 900px); }

@@ -5,7 +5,7 @@ import { AppointmentCard } from './AppointmentCard'
 import { EmptyState } from './Layout'
 import { Icon } from './Icon'
 
-export function CalendarView({ appointments, contacts, selectedDate, onSelectDate, onOpenAppointment }: { appointments: Appointment[]; contacts: Contact[]; selectedDate: string; onSelectDate: (date: string) => void; onOpenAppointment: (appointment: Appointment) => void }) {
+export function CalendarView({ appointments, contacts, selectedDate, onSelectDate, onOpenAppointment, adminMode = false, onDeleteAppointment }: { appointments: Appointment[]; contacts: Contact[]; selectedDate: string; onSelectDate: (date: string) => void; onOpenAppointment: (appointment: Appointment) => void; adminMode?: boolean; onDeleteAppointment?: (appointment: Appointment) => void }) {
   const selected = new Date(`${selectedDate}T00:00:00`)
   const [cursor, setCursor] = useState(() => new Date(selected.getFullYear(), selected.getMonth(), 1))
   const days = useMemo(() => monthGrid(cursor), [cursor])
@@ -27,7 +27,7 @@ export function CalendarView({ appointments, contacts, selectedDate, onSelectDat
       <div className="calendar-legend" aria-label="Calendar legend"><span><i className="legend-swatch previous" />Previous</span><span><i className="legend-swatch today" />Today</span><span><i className="legend-swatch upcoming" />Upcoming</span></div>
     </section>
     <section className="day-agenda"><p className="eyebrow">Selected day</p><h2>{formatLongDate(selectedDate, false)}</h2>
-      {selectedItems.length ? selectedItems.map((appointment) => <AppointmentCard key={appointment.id} appointment={appointment} contact={contacts.find((contact) => contact.id === appointment.contactId)} onClick={() => onOpenAppointment(appointment)} compact showDate={false} />) : <EmptyState title="Nothing scheduled" text="There are no appointments on this day." />}
+      {selectedItems.length ? selectedItems.map((appointment) => <AppointmentCard key={appointment.id} appointment={appointment} contact={contacts.find((contact) => contact.id === appointment.contactId)} onClick={() => onOpenAppointment(appointment)} onDelete={adminMode && onDeleteAppointment ? () => onDeleteAppointment(appointment) : undefined} compact showDate={false} />) : <EmptyState title="Nothing scheduled" text="There are no appointments on this day." />}
     </section>
   </>
 }

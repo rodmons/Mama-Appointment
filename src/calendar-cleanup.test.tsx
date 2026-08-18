@@ -1,4 +1,4 @@
-import { cleanup, render, screen } from '@testing-library/react'
+import { cleanup, fireEvent, render, screen } from '@testing-library/react'
 import '@testing-library/jest-dom/vitest'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { CalendarView } from './components/CalendarView'
@@ -30,10 +30,14 @@ describe('calendar cleanup', () => {
     expect(screen.getByText('Upcoming')).toBeInTheDocument()
   })
 
-  it('shows the selected date once above appointment cards', () => {
-    const { container } = render(<CalendarView appointments={[appointment('next', '2026-08-26')]} contacts={[]} selectedDate="2026-08-26" onSelectDate={vi.fn()} onOpenAppointment={vi.fn()} />)
+  it('shows the selected date once and exposes card deletion in Admin Mode', () => {
+    const selectedAppointment = appointment('next', '2026-08-26')
+    const onDeleteAppointment = vi.fn()
+    const { container } = render(<CalendarView appointments={[selectedAppointment]} contacts={[]} selectedDate="2026-08-26" onSelectDate={vi.fn()} onOpenAppointment={vi.fn()} adminMode onDeleteAppointment={onDeleteAppointment} />)
     expect(screen.getByRole('heading', { name: 'Wednesday, August 26' })).toBeInTheDocument()
     expect(container.querySelector('.day-agenda .date-tile')).not.toBeInTheDocument()
     expect(container.querySelector('.day-agenda .appointment-card')).toHaveClass('without-date')
+    fireEvent.click(screen.getByRole('button', { name: 'Delete Appointment next' }))
+    expect(onDeleteAppointment).toHaveBeenCalledWith(selectedAppointment)
   })
 })
