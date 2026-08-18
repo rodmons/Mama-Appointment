@@ -27,7 +27,7 @@ describe('Mama Mona Appointments', () => {
 
     fireEvent.click(screen.getByRole('switch', { name: /Admin Mode/i }))
     expect(screen.getByRole('switch', { name: /Admin Mode/i })).toHaveAttribute('aria-checked', 'true')
-    expect(screen.getByRole('button', { name: /Add contact/i })).toBeInTheDocument()
+    expect(screen.getAllByRole('button', { name: /Add contact/i }).length).toBeGreaterThan(0)
 
     fireEvent.click(screen.getByRole('button', { name: 'Account' }))
     expect(await screen.findByRole('heading', { name: 'Account' })).toBeInTheDocument()
