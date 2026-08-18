@@ -148,7 +148,7 @@ function App() {
     if (view === 'details' && selectedAppointment) return <AppointmentDetail appointment={selectedAppointment} contact={contacts.find((contact) => contact.id === selectedAppointment.contactId)} adminMode={adminMode} onBack={() => navigate(detailBackView)} onEdit={() => setModal({ type: 'appointment', appointment: selectedAppointment })} onCancel={() => setModal({ type: 'cancel', appointment: selectedAppointment })} onDelete={() => setModal({ type: 'delete', appointment: selectedAppointment })} />
     if (view === 'calendar') return <CalendarView appointments={appointments} contacts={contacts} selectedDate={selectedDate} onSelectDate={setSelectedDate} onOpenAppointment={openAppointment} />
     if (view === 'contacts') return <ContactsPage contacts={contacts} adminMode={adminMode} onEdit={(contact) => setModal({ type: 'contact', contact })} onAdd={() => setModal({ type: 'contact' })} />
-    if (view === 'settings') return <SettingsPage configured={isSupabaseConfigured} role={accessRole ?? null} adminMode={adminMode} userEmail={session?.user.email ?? ''} onAdminToggle={() => isSupabaseConfigured ? setAdminEnabled((value) => !value) : setDemoAdmin((value) => !value)} onLogout={logout} onResetDemo={resetDemo} />
+    if (view === 'settings') return <SettingsPage configured={isSupabaseConfigured} role={accessRole ?? null} userEmail={session?.user.email ?? ''} onLogout={logout} onResetDemo={resetDemo} />
     return <HomePage appointments={appointments} contacts={contacts} onOpen={openAppointment} />
   }, [accessRole, adminMode, appointments, contacts, detailBackView, loading, selectedAppointment, selectedDate, session?.user.email, view])
 
@@ -158,7 +158,7 @@ function App() {
   if (isSupabaseConfigured && accessRole === null) return <AccessPendingPage email={session?.user.email ?? ''} onLogout={logout} />
 
   return <div className="app-shell">
-    <AppHeader adminMode={adminMode} canAdmin={canAdmin} onHome={() => navigate('home')} onSettings={() => navigate('settings')} />
+    <AppHeader adminMode={adminMode} canAdmin={canAdmin} onHome={() => navigate('home')} onAdminToggle={() => isSupabaseConfigured ? setAdminEnabled((value) => !value) : setDemoAdmin((value) => !value)} onAccount={() => navigate('settings')} />
     <main id="main-content">
       {!online && <Notice tone="error">You’re offline. Saved information is still available, but changes may not sync.</Notice>}
       {!isSupabaseConfigured && view !== 'settings' && <div className="demo-banner"><span>Demo mode</span><p>Sample data · saved on this device</p></div>}
@@ -170,7 +170,7 @@ function App() {
     {message && <div className="toast" role="status">{message}</div>}
     {modal?.type === 'appointment' && <Modal title={modal.appointment ? 'Edit appointment' : 'Add appointment'} subtitle={modal.appointment ? 'Update the details below.' : 'Add the details Mama needs.'} onClose={() => setModal(null)}><AppointmentForm appointment={modal.appointment} contacts={contacts} prefilledDate={view === 'calendar' ? selectedDate : undefined} onSave={(draft) => saveAppointment(draft, modal.appointment)} onAddContact={(draft) => saveContact(draft)} onCancel={() => setModal(null)} busy={busy} /></Modal>}
     {modal?.type === 'contact' && <Modal title={modal.contact ? 'Edit contact' : 'Add contact'} subtitle="Keep contact details simple and useful." onClose={() => setModal(null)}><ContactForm contact={modal.contact} onSave={(draft) => saveContact(draft, modal.contact).then(() => undefined)} onCancel={() => setModal(null)} busy={busy} /></Modal>}
-    {modal?.type === 'cancel' && <ConfirmDialog title="Cancel this appointment?" message="It will stay in the calendar with a cancelled label." confirmLabel="Yes, cancel it" onCancel={() => setModal(null)} onConfirm={() => void cancelAppointment(modal.appointment)} />}
+    {modal?.type === 'cancel' && <ConfirmDialog title="Was appointment cancelled?" message="It will stay in the calendar with cancelled label." cancelLabel="No, keep appointment" confirmLabel="Yes, Appointment Cancelled" onCancel={() => setModal(null)} onConfirm={() => void cancelAppointment(modal.appointment)} />}
     {modal?.type === 'delete' && <ConfirmDialog title="Delete this appointment?" message="This permanently removes the appointment. This cannot be undone." confirmLabel={busy ? 'Deleting…' : 'Delete appointment'} danger onCancel={() => setModal(null)} onConfirm={() => void deleteAppointment(modal.appointment)} />}
   </div>
 }

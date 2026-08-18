@@ -25,10 +25,12 @@ describe('Mama Mona Appointments', () => {
     expect(await screen.findByRole('heading', { name: 'Doctors' })).toBeInTheDocument()
     expect(screen.getByRole('heading', { name: 'Nurses' })).toBeInTheDocument()
 
-    fireEvent.click(screen.getByRole('button', { name: /Mom Mode/i }))
-    expect(await screen.findByRole('heading', { name: 'Account' })).toBeInTheDocument()
     fireEvent.click(screen.getByRole('switch', { name: /Admin Mode/i }))
-    expect(screen.getByText(/Admin Mode is on/i)).toBeInTheDocument()
+    expect(screen.getByRole('switch', { name: /Admin Mode/i })).toHaveAttribute('aria-checked', 'true')
+    expect(screen.getByRole('button', { name: /Add contact/i })).toBeInTheDocument()
+
+    fireEvent.click(screen.getByRole('button', { name: 'Account' }))
+    expect(await screen.findByRole('heading', { name: 'Account' })).toBeInTheDocument()
   })
 
   it('shows a friendly sign-in error', async () => {

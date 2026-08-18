@@ -20,13 +20,14 @@ export function CalendarView({ appointments, contacts, selectedDate, onSelectDat
       <div className="weekday-row" aria-hidden="true">{['S', 'M', 'T', 'W', 'T', 'F', 'S'].map((day, index) => <span key={`${day}-${index}`}>{day}</span>)}</div>
       <div className="calendar-grid">{days.map(({ date, inMonth }) => {
         const value = toDateInputValue(date)
-        const count = appointments.filter((item) => item.date === value && item.status !== 'cancelled').length
-        return <button key={value} className={`${inMonth ? '' : 'outside'} ${value === today ? 'today' : ''} ${value === selectedDate ? 'selected' : ''} ${count ? 'has-appointment' : ''}`} type="button" onClick={() => onSelectDate(value)} aria-label={`${formatLongDate(value)}, ${count} appointment${count === 1 ? '' : 's'}`} aria-pressed={value === selectedDate}><span>{date.getDate()}</span>{count > 0 && <i aria-hidden="true">{count > 1 ? count : ''}</i>}</button>
+        const count = appointments.filter((item) => item.date === value).length
+        const appointmentState = count ? value < today ? 'previous-appointment' : value > today ? 'upcoming-appointment' : '' : ''
+        return <button key={value} className={`${inMonth ? '' : 'outside'} ${value === today ? 'today' : ''} ${value === selectedDate ? 'selected' : ''} ${appointmentState}`} type="button" onClick={() => onSelectDate(value)} aria-label={`${formatLongDate(value)}, ${count} appointment${count === 1 ? '' : 's'}`} aria-pressed={value === selectedDate}><span>{date.getDate()}</span></button>
       })}</div>
-      <div className="calendar-legend"><span><i className="legend-dot today" />Today</span><span><i className="legend-dot appointment" />Appointment</span></div>
+      <div className="calendar-legend" aria-label="Calendar legend"><span><i className="legend-swatch previous" />Previous</span><span><i className="legend-swatch today" />Today</span><span><i className="legend-swatch upcoming" />Upcoming</span></div>
     </section>
     <section className="day-agenda"><p className="eyebrow">Selected day</p><h2>{formatLongDate(selectedDate, false)}</h2>
-      {selectedItems.length ? selectedItems.map((appointment) => <AppointmentCard key={appointment.id} appointment={appointment} contact={contacts.find((contact) => contact.id === appointment.contactId)} onClick={() => onOpenAppointment(appointment)} compact />) : <EmptyState title="Nothing scheduled" text="There are no appointments on this day." />}
+      {selectedItems.length ? selectedItems.map((appointment) => <AppointmentCard key={appointment.id} appointment={appointment} contact={contacts.find((contact) => contact.id === appointment.contactId)} onClick={() => onOpenAppointment(appointment)} compact showDate={false} />) : <EmptyState title="Nothing scheduled" text="There are no appointments on this day." />}
     </section>
   </>
 }
