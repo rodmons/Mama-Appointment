@@ -6,6 +6,22 @@ const APPOINTMENTS_KEY = 'mama-mona-appointments'
 const CONTACTS_KEY = 'mama-mona-contacts'
 const LEGACY_DOCTORS_KEY = 'mama-mona-doctors'
 
+export class ProviderSchemaUnavailableError extends Error {}
+
+export class ProviderExtensionUnavailableError extends ProviderSchemaUnavailableError {
+  constructor() {
+    super('Extensions need a database update before they can be saved. Your changes are still here. You can leave Extension blank to save the provider now.')
+    this.name = 'ProviderExtensionUnavailableError'
+  }
+}
+
+export class ProviderMapUrlUnavailableError extends ProviderSchemaUnavailableError {
+  constructor() {
+    super('Map URLs need a database update before they can be saved. Your changes are still here. You can leave Map URL blank to save the provider now.')
+    this.name = 'ProviderMapUrlUnavailableError'
+  }
+}
+
 function readLocal<T>(key: string, fallback: T): T {
   try {
     const value = localStorage.getItem(key)
@@ -26,7 +42,9 @@ function normalizeLocalContact(item: Record<string, unknown>): Contact {
     contactType: (item.contactType ?? (String(item.specialty ?? '').toLowerCase().includes('nurse') ? 'nurse' : 'doctor')) as ContactType,
     roleOrSpecialty: String(item.roleOrSpecialty ?? item.specialty ?? ''),
     organization: String(item.organization ?? item.hospital ?? ''),
+    mapsUrl: String(item.mapsUrl ?? ''),
     phone: String(item.phone ?? ''),
+    extension: String(item.extension ?? ''),
     notes: String(item.notes ?? ''),
     createdAt: String(item.createdAt ?? new Date().toISOString()),
     updatedAt: String(item.updatedAt ?? new Date().toISOString()),
@@ -54,7 +72,9 @@ function mapContact(row: Record<string, unknown>): Contact {
     contactType: row.contact_type as ContactType,
     roleOrSpecialty: String(row.role_or_specialty ?? ''),
     organization: String(row.organization ?? ''),
+    mapsUrl: String(row.maps_url ?? ''),
     phone: String(row.phone ?? ''),
+    extension: String(row.extension ?? ''),
     notes: String(row.notes ?? ''),
     createdAt: String(row.created_at),
     updatedAt: String(row.updated_at),
@@ -86,7 +106,9 @@ function contactRow(item: ContactDraft) {
     contact_type: item.contactType,
     role_or_specialty: item.roleOrSpecialty || null,
     organization: item.organization || null,
+    maps_url: item.mapsUrl?.trim() || null,
     phone: item.phone || null,
+    extension: item.extension?.trim() || null,
     notes: item.notes || null,
   }
 }
@@ -153,13 +175,25 @@ export const dataService = {
       writeLocal(CONTACTS_KEY, existing ? items.map((item) => item.id === id ? saved : item) : [...items, saved])
       return saved
     }
-    const query = id ? supabase.from('contacts').update(contactRow(draft)).eq('id', id) : supabase.from('contacts').insert(contactRow(draft))
-    const { data, error } = await query.select().single()
-    if (error) throw error
-    return mapContact(data)
+    let row: Record<string, unknown> = contactRow(draft)
+    for (;;) {
+      const query = id ? supabase.from('contacts').update(row).eq('id', id) : supabase.from('contacts').insert(row)
+      const { data, error } = await query.select().single()
+      if (!error) return mapContact(data)
+      const missingColumn = ['extension', 'maps_url'].find((column) => new RegExp(`\\b${column}\\b`, 'i').test(error.message))
+      if (!['42703', 'PGRST204'].includes(error.code) || !missingColumn || !Object.hasOwn(row, missingColumn)) throw error
+      if (row[missingColumn]) {
+        throw missingColumn === 'extension' ? new ProviderExtensionUnavailableError() : new ProviderMapUrlUnavailableError()
+      }
+      // Missing columns reject the entire request. Retry only for blank optional fields.
+      // Removing a field from this copy also limits each field to one retry.
+      const { [missingColumn]: _missing, ...supportedRow } = row
+      row = supportedRow
+    }
   },
 
   resetDemo(): void {
+    localStorage.removeItem('mama-mona-medications')
     localStorage.removeItem(APPOINTMENTS_KEY)
     localStorage.removeItem(CONTACTS_KEY)
     localStorage.removeItem(LEGACY_DOCTORS_KEY)

@@ -1,11 +1,11 @@
 # Mama Mona Appointments
 
-A private appointment and contact organizer built with React, Vite, and Supabase.
+A private appointment, provider, and medication organizer built with React, Vite, and Supabase.
 
 ## How access works
 
 - Everyone must sign in.
-- A `viewer` can see appointments and contacts, but cannot change them.
+- A `viewer` can see appointments, providers, and medications, but cannot change them.
 - An `admin` starts in read-only Mom Mode and must turn on Admin Mode before editing.
 - Supabase Row Level Security (RLS) enforces these permissions in the database. Hiding buttons alone is not the security system.
 
@@ -64,6 +64,19 @@ Add them under **GitHub repository → Settings → Secrets and variables → Ac
 
 - `supabase/schema.sql` describes a brand-new database.
 - `supabase/rls-policies.sql` upgrades the existing project with private viewer/admin access.
+- For an existing database, run `supabase/migrations/20261023093000_provider_map_url.sql` in Supabase SQL Editor before deploying this update. It adds the optional provider map URL and extension columns without changing existing records or access rules, and is safe if the extension column already exists.
+- Provider Location keeps using the existing `contacts.organization` column. Each appointment's Location uses `appointments.location_name` independently.
+- Location links use the selected provider's map URL first, then the appointment's map URL, then a Google Maps search for the appointment address or location.
+
+## MEDS database update
+
+For the existing Supabase project, run **`supabase/migrations/20261023100000_medications.sql`** in **Supabase → SQL Editor**, then reopen MEDS. This file is safe to rerun. It requires the existing `contacts` and `app_users` tables and private access setup above. It does not change appointment or provider records or insert example medications.
+
+The migration adds `medications`, optional provider links (with a recorded-name fallback), indexes, an updated timestamp trigger, and RLS. Approved viewers can read; only admins can create, edit, or delete. The app also requires Admin Mode to expose editing controls. A missing migration shows an actionable error inside MEDS without blocking the other sections.
+
+MEDS groups records alphabetically by status, then name. Optional fields remain blank unless entered. In Demo Mode only, medications are saved to this browser's local storage and start empty. Reset Demo clears these local medication records too. With Supabase configured, medication records use the authenticated database and are not copied into local storage.
+
+For a brand-new project, run `schema.sql`, `rls-policies.sql`, and then this MEDS migration before using the app.
 
 ## Checks
 

@@ -1,12 +1,15 @@
 import type { Appointment, Contact } from '../types'
 import { formatLongDate, formatTimeRange, parseLocalDate } from '../utils/date'
 import { Icon } from './Icon'
+import { phoneHref } from '../utils/phone'
+import { appointmentMapUrl } from '../utils/maps'
 
 export function AppointmentDetail({ appointment, contact, adminMode, onBack, onEdit, onCancel, onDelete }: { appointment: Appointment; contact?: Contact; adminMode: boolean; onBack: () => void; onEdit: () => void; onCancel: () => void; onDelete: () => void }) {
-  const mapsHref = appointment.mapsUrl || (appointment.address ? `https://maps.google.com/?q=${encodeURIComponent(appointment.address)}` : '')
+  const mapsHref = appointmentMapUrl(appointment, contact)
   const phone = appointment.phone || contact?.phone || ''
-  const organization = contact?.organization || 'Not available'
-  const contactSummary = contact ? `${contact.name}${contact.roleOrSpecialty ? ` - ${contact.roleOrSpecialty}` : ''}` : 'Contact not available'
+  const extension = !appointment.phone || phoneHref(appointment.phone) === phoneHref(contact?.phone || '') ? contact?.extension : ''
+  const location = appointment.locationName || 'Not available'
+  const contactSummary = contact ? `${contact.name}${contact.roleOrSpecialty ? ` - ${contact.roleOrSpecialty}` : ''}` : 'Provider not available'
   const shortDate = new Intl.DateTimeFormat('en-CA', { month: 'short', day: 'numeric' }).format(parseLocalDate(appointment.date)).toUpperCase()
 
   return <article className="detail-page">
@@ -14,10 +17,11 @@ export function AppointmentDetail({ appointment, contact, adminMode, onBack, onE
     <section className="detail-hero">
       <span className={`status-pill ${appointment.status}`}>{appointment.status}</span><p className="detail-short-date">{shortDate}</p>
       <h1>{appointment.purpose}</h1><p className="detail-date">{formatLongDate(appointment.date)}</p><p className="detail-time">{formatTimeRange(appointment.startTime, appointment.endTime)}</p>
-      <div className="detail-hero-contact"><p><Icon name="user" />{contactSummary}</p><p><Icon name="pin" />{organization}</p></div>
+      <div className="detail-hero-contact"><p><Icon name="user" />{contactSummary}</p><p><Icon name="pin" />{location}</p></div>
     </section>
     <section className="detail-card">
-      <div className="detail-row"><span className="detail-icon"><Icon name="user" /></span><div><small>Primary contact</small><strong>{contactSummary}</strong><p className="detail-contact-organization"><Icon name="pin" />{organization}</p>{phone && <a className="button secondary detail-call-button" href={`tel:${phone.replace(/[^+\d]/g, '')}`}><Icon name="phone" />Call</a>}</div></div>
+      <div className="detail-row"><span className="detail-icon"><Icon name="user" /></span><div><small>Provider</small><strong>{contactSummary}</strong>{phone && <><p className="provider-phone"><span>{phone}</span>{' '}{extension && <span className="phone-extension">Ext. {extension}</span>}</p><a className="button secondary detail-call-button" href={phoneHref(phone, extension)}><Icon name="phone" />Call</a></>}</div></div>
+      <div className="detail-row"><span className="detail-icon"><Icon name="pin" /></span><div><small>Location</small><strong>{location}</strong></div></div>
       {appointment.address && <div className="detail-row"><span className="detail-icon"><Icon name="pin" /></span><div><small>Address</small><strong>{appointment.address}</strong></div></div>}
       {mapsHref && <div className="detail-actions"><a className="button primary" href={mapsHref} target="_blank" rel="noreferrer"><Icon name="pin" />Open in Maps</a></div>}
     </section>

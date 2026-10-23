@@ -10,7 +10,9 @@ create table if not exists public.contacts (
   contact_type text not null default 'other' check (contact_type in ('doctor', 'nurse', 'clinic', 'hospital', 'pharmacy', 'personal', 'transportation', 'other')),
   role_or_specialty text,
   organization text,
+  maps_url text,
   phone text,
+  extension text,
   notes text,
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now()

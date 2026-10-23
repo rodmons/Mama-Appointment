@@ -18,16 +18,16 @@ describe('Mama Mona Appointments', () => {
       return
     }
 
-    expect(await screen.findByText(/Good (morning|afternoon|evening), Mama/)).toBeInTheDocument()
+    expect(await screen.findByText(/Today is /)).toBeInTheDocument()
     expect(screen.getByText(/Demo Mode/i)).toBeInTheDocument()
 
-    fireEvent.click(screen.getByRole('button', { name: /Contacts/i }))
+    fireEvent.click(screen.getByRole('button', { name: /Provider/i }))
     expect(await screen.findByRole('heading', { name: 'Doctors' })).toBeInTheDocument()
     expect(screen.getByRole('heading', { name: 'Nurses' })).toBeInTheDocument()
 
     fireEvent.click(screen.getByRole('switch', { name: /Admin Mode/i }))
     expect(screen.getByRole('switch', { name: /Admin Mode/i })).toHaveAttribute('aria-checked', 'true')
-    expect(screen.getAllByRole('button', { name: /Add contact/i }).length).toBeGreaterThan(0)
+    expect(screen.getAllByRole('button', { name: /Add provider/i }).length).toBeGreaterThan(0)
 
     fireEvent.click(screen.getByRole('button', { name: 'Account' }))
     expect(await screen.findByRole('heading', { name: 'Account' })).toBeInTheDocument()

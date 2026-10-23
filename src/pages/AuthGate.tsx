@@ -14,7 +14,7 @@ export function SignInPage({ onLogin }: { onLogin: (email: string, password: str
   }
 
   return <main className="auth-page"><section className="auth-card">
-    <span className="auth-mark">♥</span><p className="eyebrow">Private family calendar</p><h1>Welcome to Mama Mona</h1><p className="auth-intro">Sign in once on this device to see appointments and contacts.</p>
+    <span className="auth-mark">♥</span><p className="eyebrow">Private family calendar</p><h1>Welcome to Mama Mona</h1><p className="auth-intro">Sign in once on this device to see appointments and providers.</p>
     <form className="app-form auth-form" onSubmit={submit}><label>Email address<input type="email" value={email} onChange={(event) => setEmail(event.target.value)} autoComplete="email" required autoFocus /></label><label>Password<input type="password" value={password} onChange={(event) => setPassword(event.target.value)} autoComplete="current-password" required /></label>{error && <Notice tone="error">{error}</Notice>}<button className="button primary full" type="submit" disabled={busy}><Icon name="lock" />{busy ? 'Signing in…' : 'Sign in securely'}</button></form>
     <p className="auth-help">Only approved family accounts can enter.</p>
   </section></main>

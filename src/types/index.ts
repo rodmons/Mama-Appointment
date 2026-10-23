@@ -8,7 +8,9 @@ export interface Contact {
   contactType: ContactType
   roleOrSpecialty: string
   organization: string
+  mapsUrl: string
   phone: string
+  extension: string
   notes: string
   createdAt: string
   updatedAt: string
@@ -32,6 +34,24 @@ export interface Appointment {
   updatedAt: string
 }
 
-export type AppView = 'home' | 'calendar' | 'contacts' | 'settings' | 'details'
+export type AppView = 'home' | 'calendar' | 'contacts' | 'meds' | 'settings' | 'details'
 export type AppointmentDraft = Omit<Appointment, 'id' | 'createdAt' | 'updatedAt'>
 export type ContactDraft = Omit<Contact, 'id' | 'createdAt' | 'updatedAt'>
+
+export type MedicationStatus = 'active' | 'on_hold' | 'completed' | 'discontinued'
+export interface Medication {
+  id: string
+  name: string
+  status: MedicationStatus
+  medicationForm: string
+  startDate: string
+  dosage: string
+  frequency: string
+  reason: string
+  providerId: string
+  prescribingDoctor: string
+  notes: string
+  createdAt: string
+  updatedAt: string
+}
+export type MedicationDraft = Omit<Medication, 'id' | 'createdAt' | 'updatedAt'>

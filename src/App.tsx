@@ -6,9 +6,10 @@ import { CalendarView } from './components/CalendarView'
 import { AppointmentForm, ConfirmDialog, ContactForm, Modal } from './components/Forms'
 import { HomePage } from './pages/HomePage'
 import { ContactsPage } from './pages/ContactsPage'
+import { MedicationsPage } from './pages/MedicationsPage'
 import { SettingsPage } from './pages/SettingsPage'
 import { AccessPendingPage, AuthLoadingPage, SignInPage } from './pages/AuthGate'
-import { dataService } from './services/dataService'
+import { dataService, ProviderSchemaUnavailableError } from './services/dataService'
 import { isSupabaseConfigured, supabase } from './services/supabase'
 import type { AppRole, Appointment, AppointmentDraft, AppView, Contact, ContactDraft } from './types'
 import { toDateInputValue } from './utils/date'
@@ -122,9 +123,13 @@ function App() {
       const saved = await dataService.saveContact(draft, contact?.id)
       setContacts((items) => contact ? items.map((item) => item.id === saved.id ? saved : item) : [...items, saved])
       if (modal?.type === 'contact') setModal(null)
-      setMessage(contact ? 'Contact updated.' : 'Contact added.')
+      setMessage(contact ? 'Provider updated.' : 'Provider added.')
       return saved
-    } catch { setMessage('The contact could not be saved. Please try again.'); throw new Error('save failed') } finally { setBusy(false) }
+    } catch (error) {
+      const saveErrorMessage = error instanceof ProviderSchemaUnavailableError ? error.message : 'The provider could not be saved. Please try again.'
+      setMessage(saveErrorMessage)
+      throw new Error(saveErrorMessage, { cause: error })
+    } finally { setBusy(false) }
   }
 
   async function cancelAppointment(appointment: Appointment) { await saveAppointment({ ...appointment, status: 'cancelled' }, appointment); setModal(null); setMessage('Appointment cancelled.') }
@@ -154,6 +159,7 @@ function App() {
     if (view === 'details' && selectedAppointment) return <AppointmentDetail appointment={selectedAppointment} contact={contacts.find((contact) => contact.id === selectedAppointment.contactId)} adminMode={adminMode} onBack={() => navigate(detailBackView)} onEdit={() => setModal({ type: 'appointment', appointment: selectedAppointment })} onCancel={() => setModal({ type: 'cancel', appointment: selectedAppointment })} onDelete={() => setModal({ type: 'delete', appointment: selectedAppointment })} />
     if (view === 'calendar') return <CalendarView appointments={appointments} contacts={contacts} selectedDate={selectedDate} onSelectDate={setSelectedDate} onOpenAppointment={openAppointment} adminMode={adminMode} onDeleteAppointment={(appointment) => setModal({ type: 'delete', appointment })} />
     if (view === 'contacts') return <ContactsPage contacts={contacts} adminMode={adminMode} onEdit={(contact) => setModal({ type: 'contact', contact })} onAdd={() => setModal({ type: 'contact' })} />
+    if (view === 'meds') return <MedicationsPage contacts={contacts} adminMode={adminMode} />
     if (view === 'settings') return <SettingsPage configured={isSupabaseConfigured} role={accessRole ?? null} userEmail={session?.user.email ?? ''} onLogout={logout} onResetDemo={resetDemo} />
     return <HomePage appointments={appointments} contacts={contacts} onOpen={openAppointment} adminMode={adminMode} onDelete={(appointment) => setModal({ type: 'delete', appointment })} />
   }, [accessRole, adminMode, appointments, contacts, detailBackView, loading, selectedAppointment, selectedDate, session?.user.email, view])
@@ -171,11 +177,11 @@ function App() {
       {loadError && <Notice tone="error">{loadError} <button type="button" onClick={() => void loadData()}>Try again</button></Notice>}
       {page}
     </main>
-    {adminMode && view !== 'details' && view !== 'settings' && <FloatingAddButton label={view === 'contacts' ? 'Add contact' : 'Add appointment'} onClick={() => setModal(view === 'contacts' ? { type: 'contact' } : { type: 'appointment' })} />}
+    {adminMode && view !== 'details' && view !== 'settings' && view !== 'meds' && <FloatingAddButton label={view === 'contacts' ? 'Add provider' : 'Add appointment'} onClick={() => setModal(view === 'contacts' ? { type: 'contact' } : { type: 'appointment' })} />}
     <BottomNavigation current={view} onChange={navigate} />
     {message && <div className="toast" role="status">{message}</div>}
     {modal?.type === 'appointment' && <Modal title={modal.appointment ? 'Edit appointment' : 'Add appointment'} subtitle={modal.appointment ? 'Update the details below.' : 'Add the details Mama needs.'} onClose={() => setModal(null)}><AppointmentForm appointment={modal.appointment} contacts={contacts} prefilledDate={view === 'calendar' ? selectedDate : undefined} onSave={(draft) => saveAppointment(draft, modal.appointment)} onAddContact={(draft) => saveContact(draft)} onCancel={() => setModal(null)} busy={busy} /></Modal>}
-    {modal?.type === 'contact' && <Modal title={modal.contact ? 'Edit contact' : 'Add contact'} subtitle="Keep contact details simple and useful." onClose={() => setModal(null)}><ContactForm contact={modal.contact} onSave={(draft) => saveContact(draft, modal.contact).then(() => undefined)} onCancel={() => setModal(null)} busy={busy} /></Modal>}
+    {modal?.type === 'contact' && <Modal title={modal.contact ? 'Edit Provider' : 'Add provider'} subtitle="Keep provider details simple and useful." onClose={() => setModal(null)}><ContactForm contact={modal.contact} onSave={(draft) => saveContact(draft, modal.contact).then(() => undefined)} onCancel={() => setModal(null)} busy={busy} /></Modal>}
     {modal?.type === 'cancel' && <ConfirmDialog title="Was appointment cancelled?" message="It will stay in the calendar with cancelled label." cancelLabel="No, keep appointment" confirmLabel="Yes, Appointment Cancelled" onCancel={() => setModal(null)} onConfirm={() => void cancelAppointment(modal.appointment)} />}
     {modal?.type === 'delete' && <ConfirmDialog title="Delete appointment?" message="Are you sure you want to permanently delete this appointment?" cancelLabel="No" confirmLabel={busy ? 'Deleting…' : 'Yes, delete'} danger onCancel={() => setModal(null)} onConfirm={() => void deleteAppointment(modal.appointment)} />}
   </div>

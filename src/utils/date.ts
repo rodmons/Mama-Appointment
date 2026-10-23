@@ -63,13 +63,6 @@ export function sortAppointments(items: Appointment[]): Appointment[] {
   return [...items].sort((a, b) => appointmentTimestamp(a) - appointmentTimestamp(b))
 }
 
-export function greeting(date = new Date()): string {
-  const hour = date.getHours()
-  if (hour < 12) return 'Good morning, Mama'
-  if (hour < 17) return 'Good afternoon, Mama'
-  return 'Good evening, Mama'
-}
-
 export function monthGrid(cursor: Date): Array<{ date: Date; inMonth: boolean }> {
   const first = new Date(cursor.getFullYear(), cursor.getMonth(), 1)
   const gridStart = new Date(first)

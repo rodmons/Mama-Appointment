@@ -3,12 +3,12 @@ import type { Appointment, Contact } from '../types'
 const createdAt = '2026-08-01T12:00:00.000Z'
 
 export const demoContacts: Contact[] = [
-  { id: 'contact-lu', name: 'Dr. Lu', contactType: 'doctor', roleOrSpecialty: 'ENT / Otolaryngologist', organization: "St. Paul's Hospital", phone: '604-555-0142', notes: '', createdAt, updatedAt: createdAt },
-  { id: 'contact-cho', name: 'Dr. Cho', contactType: 'doctor', roleOrSpecialty: 'Anesthesiologist', organization: "St. Paul's Hospital", phone: '604-555-0168', notes: '', createdAt, updatedAt: createdAt },
-  { id: 'contact-hamilton', name: 'Dr. Hamilton', contactType: 'doctor', roleOrSpecialty: 'Radiation Oncologist', organization: 'BC Cancer Vancouver', phone: '604-555-0191', notes: '', createdAt, updatedAt: createdAt },
-  { id: 'contact-harrison', name: 'Dr. Harrison', contactType: 'doctor', roleOrSpecialty: 'Oncology', organization: 'BC Cancer Vancouver', phone: '604-555-0116', notes: '', createdAt, updatedAt: createdAt },
-  { id: 'contact-minette', name: 'Minette', contactType: 'nurse', roleOrSpecialty: 'Nurse Practitioner', organization: 'Vancouver General Hospital', phone: '604-555-0184', notes: '', createdAt, updatedAt: createdAt },
-  { id: 'contact-bc-cancer', name: 'BC Cancer Main Reception', contactType: 'clinic', roleOrSpecialty: '', organization: 'BC Cancer Vancouver', phone: '604-877-6000', notes: 'General information line', createdAt, updatedAt: createdAt },
+  { id: 'contact-lu', name: 'Dr. Lu', contactType: 'doctor', roleOrSpecialty: 'ENT / Otolaryngologist', organization: "St. Paul's Hospital", mapsUrl: '', extension: '', phone: '604-555-0142', notes: '', createdAt, updatedAt: createdAt },
+  { id: 'contact-cho', name: 'Dr. Cho', contactType: 'doctor', roleOrSpecialty: 'Anesthesiologist', organization: "St. Paul's Hospital", mapsUrl: '', extension: '', phone: '604-555-0168', notes: '', createdAt, updatedAt: createdAt },
+  { id: 'contact-hamilton', name: 'Dr. Hamilton', contactType: 'doctor', roleOrSpecialty: 'Radiation Oncologist', organization: 'BC Cancer Vancouver', mapsUrl: '', extension: '', phone: '604-555-0191', notes: '', createdAt, updatedAt: createdAt },
+  { id: 'contact-harrison', name: 'Dr. Harrison', contactType: 'doctor', roleOrSpecialty: 'Oncology', organization: 'BC Cancer Vancouver', mapsUrl: '', extension: '', phone: '604-555-0116', notes: '', createdAt, updatedAt: createdAt },
+  { id: 'contact-minette', name: 'Minette', contactType: 'nurse', roleOrSpecialty: 'Nurse Practitioner', organization: 'Vancouver General Hospital', mapsUrl: '', extension: '', phone: '604-555-0184', notes: '', createdAt, updatedAt: createdAt },
+  { id: 'contact-bc-cancer', name: 'BC Cancer Main Reception', contactType: 'clinic', roleOrSpecialty: '', organization: 'BC Cancer Vancouver', mapsUrl: '', extension: '', phone: '604-877-6000', notes: 'General information line', createdAt, updatedAt: createdAt },
 ]
 
 export const demoAppointments: Appointment[] = [

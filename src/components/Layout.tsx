@@ -17,10 +17,11 @@ export function AppHeader({ adminMode, canAdmin, onHome, onAdminToggle, onAccoun
   </header>
 }
 
-const navItems: Array<{ view: AppView; label: string; icon: 'home' | 'calendar' | 'contacts' }> = [
+const navItems: Array<{ view: AppView; label: string; icon: 'home' | 'calendar' | 'contacts' | 'pill' }> = [
   { view: 'home', label: 'Home', icon: 'home' },
   { view: 'calendar', label: 'Calendar', icon: 'calendar' },
-  { view: 'contacts', label: 'Contacts', icon: 'contacts' },
+  { view: 'contacts', label: 'Provider', icon: 'contacts' },
+  { view: 'meds', label: 'MEDS', icon: 'pill' },
 ]
 
 export function BottomNavigation({ current, onChange }: { current: AppView; onChange: (view: AppView) => void }) {
@@ -36,7 +37,7 @@ export function PageIntro({ eyebrow, title, text, action }: { eyebrow?: string; 
 }
 
 export function FloatingAddButton({ onClick, label = 'Add appointment' }: { onClick: () => void; label?: string }) {
-  return <button className="floating-add" type="button" onClick={onClick} aria-label={label}><Icon name="plus" /></button>
+  return <button className={`floating-add ${label === 'Add provider' ? 'floating-add-provider' : ''}`} type="button" onClick={onClick} aria-label={label}>{label === 'Add provider' ? label : <Icon name="plus" />}</button>
 }
 
 export function Notice({ children, tone = 'info' }: { children: ReactNode; tone?: 'info' | 'error' | 'success' }) {
