@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import type { Contact, Medication, MedicationDraft, MedicationStatus } from '../types'
-import { EmptyState, Notice, PageIntro } from '../components/Layout'
+import { EmptyState, FloatingAddButton, Notice, PageIntro } from '../components/Layout'
 import { Modal } from '../components/Forms'
 import { Icon } from '../components/Icon'
 import { MedicationForm, medicationStatusLabels } from '../components/MedicationForm'
@@ -56,7 +56,8 @@ export function MedicationsPage({ contacts, adminMode }: { contacts: Contact[]; 
   }
   const selected = dialog && dialog.type !== 'add' ? dialog.medication : undefined
   return <div className="medications-page">
-    <PageIntro eyebrow="Medication records" title="Medications" action={adminMode && !loading && !loadError ? <button className="button primary" type="button" onClick={() => open({ type: 'add' })}><Icon name="plus" />Add Medication</button> : undefined} />
+    <PageIntro eyebrow="Medication records" title="Medications" />
+    {adminMode && !loading && !loadError && <FloatingAddButton label="Add MEDS" onClick={() => open({ type: 'add' })} />}
     {loading ? <p role="status">Loading medications…</p> : loadError ? <Notice tone="error">{loadError} <button type="button" onClick={() => setReload((value) => value + 1)}>Try again</button></Notice> : medications.length ? statuses.map((status) => {
       // oxlint-disable-next-line unicorn/no-array-sort -- filter creates a new array; retain ES2022 support.
       const items = medications.filter((item) => item.status === status).sort((a, b) => a.name.localeCompare(b.name, undefined, { sensitivity: 'base' }) || a.id.localeCompare(b.id))
@@ -64,7 +65,7 @@ export function MedicationsPage({ contacts, adminMode }: { contacts: Contact[]; 
         <span className={`status-pill medication-status-${item.status}`}>{medicationStatusLabels[item.status]}</span><h3>{item.name}</h3><p>{item.reason || 'Purpose not specified'}<span aria-hidden="true"> | </span>{item.dosage || 'Dosage not specified'}</p>
         <button className="button small secondary" type="button" aria-label={`More Info for ${item.name}`} onClick={() => open({ type: 'detail', medication: item })}>More Info</button>
       </article>)}</div></section> : null
-    }) : <EmptyState title="No medications added yet." text={adminMode ? 'Use Add Medication to record the first medication.' : 'Medication records will appear here. An admin can add them in Admin Mode.'} />}
+    }) : <EmptyState title="No medications added yet." text={adminMode ? 'Use Add MEDS to record the first medication.' : 'Medication records will appear here. An admin can add them in Admin Mode.'} />}
     {message && <div className="toast" role="status">{message}</div>}
     {(dialog?.type === 'add' || dialog?.type === 'edit') && adminMode && <Modal title={dialog.type === 'edit' ? 'Edit Medication' : 'Add Medication'} onClose={close}><MedicationForm key={dialog.type === 'edit' ? dialog.medication.id : 'new'} medication={dialog.type === 'edit' ? dialog.medication : undefined} contacts={contacts} busy={busy} onSave={save} onCancel={close} /></Modal>}
     {dialog?.type === 'detail' && selected && <Modal title={selected.name} onClose={close}>

@@ -11,9 +11,9 @@ const sections: Array<{ title: string; types: ContactType[] }> = [
   { title: 'Other providers', types: ['personal', 'transportation', 'other'] },
 ]
 
-export function ContactsPage({ contacts, adminMode, onEdit, onAdd }: { contacts: Contact[]; adminMode: boolean; onEdit: (contact: Contact) => void; onAdd: () => void }) {
+export function ContactsPage({ contacts, adminMode, onEdit }: { contacts: Contact[]; adminMode: boolean; onEdit: (contact: Contact) => void }) {
   return <div>
-    <PageIntro eyebrow="People & places" title="Provider" text="Care providers, clinics, and other useful numbers." action={adminMode ? <button className="button small secondary desktop-add" type="button" onClick={onAdd}>Add provider</button> : undefined} />
+    <PageIntro eyebrow="People & places" title="Provider" text="Care providers, clinics, and other useful numbers." />
     {contacts.length ? <div className="contact-sections">{sections.map((section) => {
       const items = contacts.filter((contact) => section.types.includes(contact.contactType))
       if (!items.length) return null

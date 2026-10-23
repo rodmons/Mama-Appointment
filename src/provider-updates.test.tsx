@@ -35,10 +35,10 @@ describe('provider updates', () => {
     unmount()
     const { contacts } = await dataService.load()
     expect(contacts[0].extension).toBe('0088')
-    render(<ContactsPage contacts={contacts} adminMode onEdit={vi.fn()} onAdd={vi.fn()} />)
+    render(<ContactsPage contacts={contacts} adminMode onEdit={vi.fn()} />)
     const phone = screen.getByRole('link', { name: '604 877 6000 Ext. 0088' })
     expect(phone).toHaveAttribute('href', 'tel:6048776000;ext=0088')
-    expect(screen.getByRole('button', { name: 'Add provider' }).querySelector('svg')).toBeNull()
+    expect(screen.queryByRole('button', { name: 'Add provider' })).not.toBeInTheDocument()
   })
 
   it('loads older providers with no extension and keeps it optional', async () => {

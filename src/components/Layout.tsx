@@ -11,17 +11,18 @@ export function AppHeader({ adminMode, canAdmin, onHome, onAdminToggle, onAccoun
     <div className="header-actions">
       {canAdmin ? <button className={`header-mode-toggle ${adminMode ? 'is-admin' : ''}`} type="button" role="switch" aria-label="Admin Mode" aria-checked={adminMode} onClick={onAdminToggle}>
         <span className="header-mode-label">Admin Mode</span><span className={`header-switch ${adminMode ? 'on' : ''}`} aria-hidden="true"><span /></span>
-      </button> : <span className="viewer-badge"><Icon name="lock" /><span>View only</span></span>}
+      </button> : <span className="viewer-badge"><Icon name="lock" /><span>Mom Mode</span></span>}
       <button className="header-account" type="button" aria-label="Account" onClick={onAccount}><Icon name="user" /></button>
     </div>
   </header>
 }
 
-const navItems: Array<{ view: AppView; label: string; icon: 'home' | 'calendar' | 'contacts' | 'pill' }> = [
+const navItems: Array<{ view: AppView; label: string; icon: 'home' | 'calendar' | 'contacts' | 'pill' | 'pulse' }> = [
   { view: 'home', label: 'Home', icon: 'home' },
   { view: 'calendar', label: 'Calendar', icon: 'calendar' },
   { view: 'contacts', label: 'Provider', icon: 'contacts' },
   { view: 'meds', label: 'MEDS', icon: 'pill' },
+  { view: 'bp', label: 'BP', icon: 'pulse' },
 ]
 
 export function BottomNavigation({ current, onChange }: { current: AppView; onChange: (view: AppView) => void }) {
@@ -37,7 +38,7 @@ export function PageIntro({ eyebrow, title, text, action }: { eyebrow?: string; 
 }
 
 export function FloatingAddButton({ onClick, label = 'Add appointment' }: { onClick: () => void; label?: string }) {
-  return <button className={`floating-add ${label === 'Add provider' ? 'floating-add-provider' : ''}`} type="button" onClick={onClick} aria-label={label}>{label === 'Add provider' ? label : <Icon name="plus" />}</button>
+  return <button className={`floating-add ${label !== 'Add appointment' ? 'floating-add-labeled' : ''}`} type="button" onClick={onClick} aria-label={label}>{label !== 'Add appointment' ? label : <Icon name="plus" />}</button>
 }
 
 export function Notice({ children, tone = 'info' }: { children: ReactNode; tone?: 'info' | 'error' | 'success' }) {

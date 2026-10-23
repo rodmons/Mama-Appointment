@@ -1,8 +1,9 @@
 import type { ReactNode, SVGProps } from 'react'
 
-export type IconName = 'home' | 'calendar' | 'contacts' | 'pill' | 'settings' | 'plus' | 'back' | 'next' | 'pin' | 'clock' | 'phone' | 'bag' | 'edit' | 'trash' | 'check' | 'close' | 'user' | 'wifi' | 'lock'
+export type IconName = 'home' | 'calendar' | 'contacts' | 'pill' | 'pulse' | 'settings' | 'plus' | 'back' | 'next' | 'pin' | 'clock' | 'phone' | 'bag' | 'edit' | 'trash' | 'check' | 'close' | 'user' | 'wifi' | 'lock'
 
 const paths: Record<IconName, ReactNode> = {
+  pulse: <><path d="M3 12h4l3-8 4 16 3-8h4" /></>,
   pill: <><path d="m9 4-5 5a7.1 7.1 0 0 0 10 10l5-5A7.1 7.1 0 0 0 9 4Z"/><path d="m7 7 10 10"/></>,
   home: <><path d="m3 11 9-8 9 8"/><path d="M5 10v10h14V10"/><path d="M9 20v-6h6v6"/></>,
   calendar: <><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M16 3v4M8 3v4M3 10h18"/></>,

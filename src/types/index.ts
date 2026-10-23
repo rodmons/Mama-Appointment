@@ -34,7 +34,7 @@ export interface Appointment {
   updatedAt: string
 }
 
-export type AppView = 'home' | 'calendar' | 'contacts' | 'meds' | 'settings' | 'details'
+export type AppView = 'home' | 'calendar' | 'contacts' | 'meds' | 'bp' | 'settings' | 'details'
 export type AppointmentDraft = Omit<Appointment, 'id' | 'createdAt' | 'updatedAt'>
 export type ContactDraft = Omit<Contact, 'id' | 'createdAt' | 'updatedAt'>
 
@@ -55,3 +55,15 @@ export interface Medication {
   updatedAt: string
 }
 export type MedicationDraft = Omit<Medication, 'id' | 'createdAt' | 'updatedAt'>
+
+export type PillTiming = 'before' | 'after'
+export interface BloodPressureReading {
+  id: string
+  takenAt: string
+  systolic: number
+  diastolic: number
+  pulse: number
+  pillTiming: PillTiming
+  createdAt: string
+}
+export type BloodPressureDraft = Omit<BloodPressureReading, 'id' | 'createdAt'>

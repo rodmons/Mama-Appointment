@@ -5,8 +5,8 @@ A private appointment, provider, and medication organizer built with React, Vite
 ## How access works
 
 - Everyone must sign in.
-- A `viewer` can see appointments, providers, and medications, but cannot change them.
-- An `admin` starts in read-only Mom Mode and must turn on Admin Mode before editing.
+- A `viewer` can see appointments, providers, and medications, and can add blood pressure readings in BP at any time.
+- An `admin` starts in Mom Mode and must turn on Admin Mode to change appointments, providers, or medications. Logging BP does not require Admin Mode.
 - Supabase Row Level Security (RLS) enforces these permissions in the database. Hiding buttons alone is not the security system.
 
 Never put a Supabase `service_role` or secret key in this app, GitHub, or a browser. The app only needs the project URL and publishable key. The publishable key is designed to be visible; RLS protects the data.
@@ -77,6 +77,16 @@ The migration adds `medications`, optional provider links (with a recorded-name 
 MEDS groups records alphabetically by status, then name. Optional fields remain blank unless entered. In Demo Mode only, medications are saved to this browser's local storage and start empty. Reset Demo clears these local medication records too. With Supabase configured, medication records use the authenticated database and are not copied into local storage.
 
 For a brand-new project, run `schema.sql`, `rls-policies.sql`, and then this MEDS migration before using the app.
+
+## BP database update
+
+Run **[`supabase/migrations/20261023110000_blood_pressure.sql`](supabase/migrations/20261023110000_blood_pressure.sql)** in **Supabase → SQL Editor**, then reopen BP. It requires the existing `app_users` table and private access setup. It is safe to rerun and leaves appointments, providers, and medications unchanged.
+
+The migration creates `blood_pressure_readings` and its index and RLS policies. Both approved viewers and admins can read and insert readings; Admin Mode is not required. Unapproved and signed-out users cannot access readings. Updates and deletions are not granted. Each reading records its signed-in author automatically.
+
+BP records date and time, systolic, diastolic, pulse, and a Before pills / After pills dropdown. Readings appear in rows with the most recent measurement first. Times are entered and displayed in the device's local time and stored as timestamps with a time zone. Numeric values must be whole numbers from 1 to 999; this is input validation, not a medical assessment.
+
+In Demo Mode, BP starts empty and saves only to this browser; Reset Demo clears these readings. With Supabase configured, readings are stored only in the authenticated database. Missing SQL shows a retryable error within BP.
 
 ## Checks
 

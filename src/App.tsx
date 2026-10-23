@@ -7,6 +7,7 @@ import { AppointmentForm, ConfirmDialog, ContactForm, Modal } from './components
 import { HomePage } from './pages/HomePage'
 import { ContactsPage } from './pages/ContactsPage'
 import { MedicationsPage } from './pages/MedicationsPage'
+import { BloodPressurePage } from './pages/BloodPressurePage'
 import { SettingsPage } from './pages/SettingsPage'
 import { AccessPendingPage, AuthLoadingPage, SignInPage } from './pages/AuthGate'
 import { dataService, ProviderSchemaUnavailableError } from './services/dataService'
@@ -158,8 +159,9 @@ function App() {
     if (loading) return <div className="loading-page" aria-label="Loading appointments"><div className="skeleton heading" /><div className="skeleton hero" /><div className="skeleton card" /><div className="skeleton card" /></div>
     if (view === 'details' && selectedAppointment) return <AppointmentDetail appointment={selectedAppointment} contact={contacts.find((contact) => contact.id === selectedAppointment.contactId)} adminMode={adminMode} onBack={() => navigate(detailBackView)} onEdit={() => setModal({ type: 'appointment', appointment: selectedAppointment })} onCancel={() => setModal({ type: 'cancel', appointment: selectedAppointment })} onDelete={() => setModal({ type: 'delete', appointment: selectedAppointment })} />
     if (view === 'calendar') return <CalendarView appointments={appointments} contacts={contacts} selectedDate={selectedDate} onSelectDate={setSelectedDate} onOpenAppointment={openAppointment} adminMode={adminMode} onDeleteAppointment={(appointment) => setModal({ type: 'delete', appointment })} />
-    if (view === 'contacts') return <ContactsPage contacts={contacts} adminMode={adminMode} onEdit={(contact) => setModal({ type: 'contact', contact })} onAdd={() => setModal({ type: 'contact' })} />
+    if (view === 'contacts') return <ContactsPage contacts={contacts} adminMode={adminMode} onEdit={(contact) => setModal({ type: 'contact', contact })} />
     if (view === 'meds') return <MedicationsPage contacts={contacts} adminMode={adminMode} />
+    if (view === 'bp') return <BloodPressurePage />
     if (view === 'settings') return <SettingsPage configured={isSupabaseConfigured} role={accessRole ?? null} userEmail={session?.user.email ?? ''} onLogout={logout} onResetDemo={resetDemo} />
     return <HomePage appointments={appointments} contacts={contacts} onOpen={openAppointment} adminMode={adminMode} onDelete={(appointment) => setModal({ type: 'delete', appointment })} />
   }, [accessRole, adminMode, appointments, contacts, detailBackView, loading, selectedAppointment, selectedDate, session?.user.email, view])
@@ -177,7 +179,7 @@ function App() {
       {loadError && <Notice tone="error">{loadError} <button type="button" onClick={() => void loadData()}>Try again</button></Notice>}
       {page}
     </main>
-    {adminMode && view !== 'details' && view !== 'settings' && view !== 'meds' && <FloatingAddButton label={view === 'contacts' ? 'Add provider' : 'Add appointment'} onClick={() => setModal(view === 'contacts' ? { type: 'contact' } : { type: 'appointment' })} />}
+    {adminMode && ['home', 'calendar', 'contacts'].includes(view) && <FloatingAddButton label={view === 'contacts' ? 'Add provider' : 'Add appointment'} onClick={() => setModal(view === 'contacts' ? { type: 'contact' } : { type: 'appointment' })} />}
     <BottomNavigation current={view} onChange={navigate} />
     {message && <div className="toast" role="status">{message}</div>}
     {modal?.type === 'appointment' && <Modal title={modal.appointment ? 'Edit appointment' : 'Add appointment'} subtitle={modal.appointment ? 'Update the details below.' : 'Add the details Mama needs.'} onClose={() => setModal(null)}><AppointmentForm appointment={modal.appointment} contacts={contacts} prefilledDate={view === 'calendar' ? selectedDate : undefined} onSave={(draft) => saveAppointment(draft, modal.appointment)} onAddContact={(draft) => saveContact(draft)} onCancel={() => setModal(null)} busy={busy} /></Modal>}
