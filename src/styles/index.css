@@ -333,13 +333,14 @@ main { width: min(100% - 32px, 780px); margin: 0 auto; padding: 30px 0 48px; }
 }
 
 .medications-page .page-intro { align-items: center; flex-wrap: wrap; }
-.medication-group { margin: 30px 0; }
-.medication-group > h2 { color: var(--muted); font-size: 13px; letter-spacing: .1em; text-transform: uppercase; margin-bottom: 14px; }
-.medication-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr)); gap: 14px; }
-.medication-card { min-width: 0; padding: 20px; border: 1px solid var(--border); border-radius: 22px; background: var(--surface); display: flex; flex-direction: column; align-items: flex-start; }
-.medication-card h3 { margin: 14px 0 7px; font-size: 22px; overflow-wrap: anywhere; }
-.medication-card p { font-size: 14px; color: var(--muted); overflow-wrap: anywhere; margin-bottom: 18px; }
-.medication-card .button { margin-top: auto; }
+.medication-group { margin: 22px 0; }
+.medication-group > h2 { color: var(--muted); font-size: 13px; letter-spacing: .1em; text-transform: uppercase; margin-bottom: 10px; }
+.medication-grid { display: grid; grid-template-columns: minmax(0, 1fr); gap: 8px; }
+.medication-card { min-width: 0; padding: 10px 14px; border: 1px solid var(--border); border-radius: 14px; background: var(--surface); display: flex; align-items: center; gap: 12px; }
+.medication-summary { flex: 1; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: 15px; }
+.medication-summary h3 { display: inline; margin: 0; font-size: inherit; }
+.medication-reason { color: var(--muted); }
+.medication-card .button { flex: 0 0 auto; min-height: 38px; padding: 7px 10px; font-size: 13px; white-space: nowrap; }
 .medication-status-active { background: #d9ede7; color: #1f5148; }
 .medication-status-completed { background: #dfecf6; color: #37566f; }
 .medication-status-discontinued { background: #f3e2df; color: #80413b; }
@@ -364,12 +365,24 @@ main { width: min(100% - 32px, 780px); margin: 0 auto; padding: 30px 0 48px; }
 .bp-table tbody tr + tr { border-top: 1px solid var(--border); }
 .bp-table td:not(:first-child):not(:last-child) { font-weight: 700; font-variant-numeric: tabular-nums; }
 .bp-table small { display: block; color: var(--muted); font-size: 12px; font-weight: 400; }
+.bp-table .bp-averages { background: #edf4f0; color: var(--accent-dark); }
+.bp-table .bp-averages th, .bp-table .bp-averages td { padding-top: 11px; padding-bottom: 11px; background: transparent; font-weight: 700; }
+.bp-edit { display: flex; align-items: center; gap: 4px; min-height: 32px; border: 0; background: transparent; color: var(--accent); font-size: 12px; font-weight: 700; padding: 4px 0; }
+.bp-edit svg { width: 13px; height: 13px; }
+.bp-number-fields { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; width: 100%; max-width: 288px; }
+.bp-number-fields input { text-align: center; padding: 10px; font-size: 18px; }
 .bp-page .app-form input { min-width: 0; max-width: 100%; }
 .bp-page button:disabled { opacity: .6; cursor: wait; }
 @media (max-width: 599px) {
+  .medication-card { padding: 9px 10px; gap: 8px; }
+  .medication-summary { font-size: 14px; }
+  .medication-card .button { padding: 6px 8px; font-size: 12px; }
   .bp-table th, .bp-table td { padding: 14px 5px; }
   .bp-table th { font-size: 11px; }
   .bp-table td { font-size: 14px; }
   .bp-table td:first-child, .bp-table td:last-child { font-size: 12px; }
   .bp-table small { font-size: 11px; }
+}
+@media (max-width: 370px) {
+  .bp-table th { font-size: 10px; overflow-wrap: normal; }
 }

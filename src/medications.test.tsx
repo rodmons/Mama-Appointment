@@ -14,6 +14,17 @@ beforeEach(() => { localStorage.clear(); window.scrollTo = vi.fn() })
 afterEach(() => { cleanup(); vi.restoreAllMocks() })
 
 describe('MEDS', () => {
+  it('shows name, dosage, purpose and details in one minimal summary without repeated status badges', async () => {
+    await medicationService.save({ ...draft, name: 'Apixaban', dosage: '5 mg', reason: 'Blood thinner' })
+    render(<MedicationsPage contacts={[]} adminMode={false} />)
+    const moreInfo = await screen.findByRole('button', { name: 'More Info for Apixaban' })
+    const card = moreInfo.closest('article')!
+    expect(card.querySelector('.medication-summary')).toHaveTextContent('Apixaban 5 mg - Blood thinner')
+    expect(card.querySelector('.status-pill')).toBeNull()
+    fireEvent.click(moreInfo)
+    expect(screen.getByRole('dialog')).toHaveTextContent('Blood thinner')
+    expect(screen.getByRole('dialog')).toHaveTextContent('5 mg')
+  })
   it('supports add, refresh, details, status change, confirmed deletion and existing navigation', async () => {
     const app = render(<App />)
     fireEvent.click(await screen.findByRole('button', { name: 'MEDS' }))

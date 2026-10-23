@@ -62,7 +62,7 @@ export function MedicationsPage({ contacts, adminMode }: { contacts: Contact[]; 
       // oxlint-disable-next-line unicorn/no-array-sort -- filter creates a new array; retain ES2022 support.
       const items = medications.filter((item) => item.status === status).sort((a, b) => a.name.localeCompare(b.name, undefined, { sensitivity: 'base' }) || a.id.localeCompare(b.id))
       return items.length ? <section className="medication-group" key={status} aria-labelledby={`medication-${status}`}><h2 id={`medication-${status}`}>{medicationStatusLabels[status]}</h2><div className="medication-grid">{items.map((item) => <article className="medication-card" key={item.id}>
-        <span className={`status-pill medication-status-${item.status}`}>{medicationStatusLabels[item.status]}</span><h3>{item.name}</h3><p>{item.reason || 'Purpose not specified'}<span aria-hidden="true"> | </span>{item.dosage || 'Dosage not specified'}</p>
+        <div className="medication-summary" title={[item.name, item.dosage, item.reason].filter(Boolean).join(' · ')}><h3>{item.name}</h3>{item.dosage && <span className="medication-dosage"> {item.dosage}</span>}{item.reason && <span className="medication-reason"> - {item.reason}</span>}</div>
         <button className="button small secondary" type="button" aria-label={`More Info for ${item.name}`} onClick={() => open({ type: 'detail', medication: item })}>More Info</button>
       </article>)}</div></section> : null
     }) : <EmptyState title="No medications added yet." text={adminMode ? 'Use Add MEDS to record the first medication.' : 'Medication records will appear here. An admin can add them in Admin Mode.'} />}
