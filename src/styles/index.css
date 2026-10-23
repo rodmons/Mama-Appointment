@@ -22,7 +22,7 @@
 }
 
 * { box-sizing: border-box; }
-html { scroll-behavior: smooth; }
+html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
 body { margin: 0; min-width: 320px; min-height: 100vh; background: radial-gradient(circle at 50% -10%, #fff 0, transparent 34%), #f7f4ee; font-size: 18px; line-height: 1.5; }
 button, input, textarea, select { font: inherit; }
 button, a { -webkit-tap-highlight-color: transparent; }
@@ -262,7 +262,7 @@ main { width: min(100% - 32px, 780px); margin: 0 auto; padding: 30px 0 48px; }
 .optional { float: right; color: #939b98; font-size: 11px; font-weight: 500; }
 .field-error { display: block; color: var(--danger); font-size: 12px; margin-top: 5px; }
 .form-grid { display: grid; gap: 13px; }
-.form-grid.two { grid-template-columns: 1fr 1fr; }
+.form-grid.two { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 .form-actions { display: grid; grid-template-columns: 1fr 1.2fr; gap: 10px; margin-top: 5px; }
 .doctor-field { position: relative; }
 .doctor-options { border: 1px solid var(--border); border-radius: 15px; background: #fff; padding: 6px; box-shadow: 0 12px 28px rgba(30,57,51,.14); max-height: 250px; overflow-y: auto; margin-top: 5px; }

@@ -1,0 +1,142 @@
+/* Let content shrink inside grids, including native date/time controls on iOS. */
+.app-form, .app-form label, .form-grid > *, .form-actions > *,
+.doctor-field, .detail-row > *, .page-intro > *, .modal-header > div {
+  min-width: 0;
+}
+.app-form input, .app-form select, .app-form textarea, .doctor-field > input {
+  display: block;
+  min-width: 0;
+  max-width: 100%;
+  /* Smaller input text triggers focus zoom in mobile Safari. */
+  font-size: 16px;
+  font-weight: 400;
+}
+.inline-input { grid-template-columns: minmax(0, 1fr) auto; }
+.detail-row { grid-template-columns: 44px minmax(0, 1fr); }
+.doctor-card { grid-template-columns: 58px minmax(0, 1fr) auto; }
+.page-intro, .section-heading, .modal-header { gap: 12px; }
+.modal-header { flex-shrink: 0; }
+.modal-header > button { flex-shrink: 0; }
+.modal-body { min-height: 0; }
+.page-intro h1, .next-purpose, .next-meta, .doctor-info,
+.detail-row, .detail-hero, .detail-notes, .settings-copy,
+.modal-header h2, .notice, .tag-list li, .doctor-options { overflow-wrap: anywhere; }
+.tag-list li { min-width: 0; max-width: 100%; }
+.tag-list button { flex-shrink: 0; }
+
+@media (max-width: 599px) {
+  body { min-width: 0; font-size: 16px; line-height: 1.45; }
+  .app-shell { min-height: 100dvh; padding-bottom: calc(72px + env(safe-area-inset-bottom)); }
+  .app-header {
+    height: auto;
+    min-height: 64px;
+    padding: calc(8px + env(safe-area-inset-top)) max(12px, env(safe-area-inset-right)) 8px max(12px, env(safe-area-inset-left));
+    gap: 8px;
+  }
+  .brand { gap: 7px; min-width: 0; min-height: 44px; }
+  .brand-mark { width: 34px; height: 34px; border-radius: 11px; flex-shrink: 0; box-shadow: none; }
+  .brand strong { font-size: 14px; }
+  .brand small { font-size: 10px; }
+  .header-actions { gap: 6px; flex-shrink: 0; }
+  .header-mode-toggle { font-size: 12px; padding: 0 8px; gap: 6px; }
+  main { width: auto; margin-left: max(12px, env(safe-area-inset-left)); margin-right: max(12px, env(safe-area-inset-right)); padding: 16px 0 68px; }
+  h1 { font-size: 28px; }
+  h2 { font-size: 19px; }
+  .page-intro { margin: 0 0 18px; }
+  .page-intro h1 { margin: 0 0 5px; }
+  .home-page .page-intro h1 { font-size: 22px; line-height: 1.25; }
+  .page-intro p:not(.eyebrow) { font-size: 14px; }
+  .eyebrow { font-size: 10px; margin-bottom: 5px; }
+  .demo-banner { margin: 0 0 14px; padding: 8px 10px; border-radius: 10px; font-size: 11px; }
+  .demo-banner span { flex-shrink: 0; }
+  .notice { padding: 10px 12px; font-size: 14px; border-radius: 10px; }
+
+  .next-card { padding: 18px; border-radius: 16px; box-shadow: none; }
+  .next-card-shell:has(.appointment-delete-button) .eyebrow { padding-right: 34px; }
+  .next-date { margin: 12px 0 0; }
+  .next-date strong { font-size: 12px; }
+  .next-date span { font-size: 26px; }
+  .next-time { font-size: 40px; margin: 10px 0 5px; }
+  .next-purpose { font-size: 18px; margin-bottom: 8px; }
+  .next-meta { font-size: 13px; margin-top: 5px; }
+  .next-footer { margin-top: 14px; padding-top: 10px; font-size: 13px; }
+  .content-section { margin-top: 24px; }
+  .section-heading { margin-bottom: 10px; }
+  .section-heading h2 { font-size: 21px; }
+  .card-stack { gap: 8px; }
+  .appointment-card, .appointment-card.compact { grid-template-columns: 46px minmax(0, 1fr) 16px; gap: 10px; padding: 12px; border-radius: 12px; box-shadow: none; }
+  .appointment-card.without-date, .appointment-card.compact.without-date { grid-template-columns: minmax(0, 1fr) 16px; }
+  .date-tile, .appointment-card.compact .date-tile { width: 46px; height: 52px; border-radius: 10px; }
+  .date-tile strong { font-size: 22px; }
+  .appointment-summary > strong { font-size: 16px; margin: 3px 0 4px; overflow-wrap: anywhere; }
+  .appointment-summary > span:not(.card-topline) { white-space: normal; overflow-wrap: anywhere; font-size: 12px; }
+  .card-topline { flex-wrap: wrap; font-size: 9px; }
+  .history-section { margin-top: 20px; padding-top: 10px; }
+  .quiet-text, .empty-state { padding: 18px 12px; border-radius: 12px; font-size: 14px; }
+
+  .calendar-card { padding: 12px 8px 10px; border-radius: 14px; box-shadow: none; }
+  .calendar-header { grid-template-columns: 44px minmax(0, 1fr) 44px; margin-bottom: 5px; }
+  .calendar-header h2 { font-size: 19px; }
+  .weekday-row, .calendar-grid { grid-template-columns: repeat(7, minmax(0, 1fr)); }
+  .calendar-legend { gap: 10px; flex-wrap: wrap; margin-top: 8px; padding-top: 10px; font-size: 10px; }
+  .day-agenda { margin-top: 20px; }
+  .day-agenda h2 { font-size: 23px; margin-bottom: 12px; }
+
+  .contact-sections { gap: 22px; }
+  .contact-section > h2 { font-size: 12px; margin-bottom: 4px; }
+  .doctor-grid { gap: 0; }
+  .doctor-card { grid-template-columns: 36px minmax(0, 1fr) auto; gap: 10px; padding: 12px 0; border: 0; border-bottom: 1px solid var(--border); border-radius: 0; background: transparent; }
+  .doctor-avatar { width: 36px; height: 40px; border-radius: 10px; font-size: 23px; align-self: start; }
+  .doctor-info h3 { font-size: 16px; }
+  .doctor-info p.specialty { margin-bottom: 4px; }
+  .doctor-info p, .doctor-info a { font-size: 13px; }
+  .edit-doctor { width: 44px; height: 44px; border-radius: 10px; }
+  .provider-phone { min-height: 32px; }
+  .medication-group { margin: 18px 0; }
+  .medication-card { border-radius: 10px; }
+  .medication-card .button { min-height: 44px; }
+  .bp-table-shell { border-radius: 12px; }
+  .bp-table th, .bp-table td { padding: 10px 5px; }
+  .bp-edit { min-height: 44px; }
+
+  .detail-hero { padding: 18px; margin: 12px 0; border-radius: 16px; box-shadow: none; }
+  .detail-hero h1 { font-size: 28px; }
+  .detail-short-date { font-size: 28px; margin-top: 14px; }
+  .detail-time { font-size: 21px; }
+  .detail-hero-contact { margin-top: 14px; padding-top: 12px; }
+  .detail-card, .settings-card { padding: 14px; border-radius: 12px; }
+  .detail-row { grid-template-columns: 34px minmax(0, 1fr); gap: 10px; }
+  .detail-icon { width: 34px; height: 36px; border-radius: 10px; }
+  .detail-row strong { font-size: 16px; }
+  .detail-row + .detail-row { margin-top: 12px; padding-top: 12px; }
+  .settings-icon { width: 38px; height: 38px; margin-bottom: 10px; border-radius: 10px; }
+  .privacy-note { padding: 14px; margin-top: 16px; border-radius: 12px; }
+
+  .bottom-nav { min-height: 64px; padding: 4px max(6px, env(safe-area-inset-right)) calc(4px + env(safe-area-inset-bottom)) max(6px, env(safe-area-inset-left)); }
+  .bottom-nav button { min-width: 0; min-height: 54px; padding: 4px 2px; gap: 2px; font-size: 10px; border-radius: 10px; }
+  .bottom-nav svg { width: 21px; height: 21px; }
+  .floating-add { width: 52px; height: 52px; right: max(12px, env(safe-area-inset-right)); bottom: calc(76px + env(safe-area-inset-bottom)); border-width: 3px; box-shadow: 0 5px 14px rgba(146,89,54,.2); }
+  .floating-add-labeled { width: auto; padding: 0 16px; font-size: 14px; }
+  .toast { bottom: calc(76px + env(safe-area-inset-bottom)); border-radius: 14px; font-size: 13px; }
+
+  .modal-backdrop { padding-top: max(12px, env(safe-area-inset-top)); }
+  .modal-sheet { max-height: calc(100dvh - max(12px, env(safe-area-inset-top))); border-radius: 18px 18px 0 0; }
+  .modal-header { padding: 12px 14px; align-items: center; }
+  .modal-header h2 { font-size: 20px; }
+  .modal-header p { font-size: 12px; }
+  .modal-body { padding: 14px 14px max(20px, env(safe-area-inset-bottom)); }
+  .app-form, .medication-fields { gap: 13px; }
+  .app-form label, .bring-field legend, .doctor-field > label { font-size: 13px; }
+  .app-form input, .app-form select, .app-form textarea, .doctor-field > input { min-height: 44px; padding: 10px 12px; border-radius: 10px; margin-top: 5px; }
+  .optional { float: none; display: inline; margin-left: 5px; }
+  .form-grid.two { grid-template-columns: minmax(0, 1fr); }
+  .form-actions { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .button { min-height: 44px; padding: 10px 12px; font-size: 14px; border-radius: 10px; }
+  .inline-input .button { min-height: 44px; }
+  .bp-number-fields { gap: 10px; max-width: none; }
+  .auth-page { width: auto; min-height: 100dvh; padding: max(20px, env(safe-area-inset-top)) 0 max(20px, env(safe-area-inset-bottom)); }
+  .auth-card { padding: 22px 18px; border-radius: 16px; box-shadow: none; }
+  .auth-card h1 { font-size: 30px; }
+  .auth-mark { width: 46px; height: 46px; margin-bottom: 16px; border-radius: 14px; }
+  .auth-intro { font-size: 14px; margin-bottom: 18px; }
+}
