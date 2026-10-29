@@ -193,6 +193,7 @@ export const dataService = {
   },
 
   resetDemo(): void {
+    localStorage.removeItem('mama-mona-calendar-notes')
     localStorage.removeItem('mama-mona-blood-pressure')
     localStorage.removeItem('mama-mona-medications')
     localStorage.removeItem(APPOINTMENTS_KEY)

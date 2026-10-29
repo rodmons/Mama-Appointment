@@ -4,7 +4,7 @@ import { toDateInputValue } from '../utils/date'
 import { Icon } from './Icon'
 import { validMapUrl } from '../utils/maps'
 
-export function Modal({ title, subtitle, children, onClose }: { title: string; subtitle?: string; children: ReactNode; onClose: () => void }) {
+export function Modal({ title, subtitle, children, onClose, centered = false }: { title: string; subtitle?: string; children: ReactNode; onClose: () => void; centered?: boolean }) {
   const sheet = useRef<HTMLElement>(null)
   const close = useRef(onClose)
   close.current = onClose
@@ -24,7 +24,7 @@ export function Modal({ title, subtitle, children, onClose }: { title: string; s
     document.addEventListener('keydown', keyboard)
     return () => { document.removeEventListener('keydown', keyboard); document.body.style.overflow = overflow; if (previous?.isConnected) previous.focus() }
   }, [])
-  return <div className="modal-backdrop" role="presentation"><section ref={sheet} className="modal-sheet" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+  return <div className={`modal-backdrop${centered ? ' centered' : ''}`} role="presentation"><section ref={sheet} className="modal-sheet" role="dialog" aria-modal="true" aria-labelledby="modal-title">
     <header className="modal-header"><div><h2 id="modal-title">{title}</h2>{subtitle && <p>{subtitle}</p>}</div><button type="button" onClick={onClose} aria-label="Close"><Icon name="close" /></button></header>
     <div className="modal-body">{children}</div>
   </section></div>

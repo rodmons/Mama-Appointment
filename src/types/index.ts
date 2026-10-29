@@ -67,3 +67,11 @@ export interface BloodPressureReading {
   createdAt: string
 }
 export type BloodPressureDraft = Omit<BloodPressureReading, 'id' | 'createdAt'>
+
+export interface CalendarNote {
+  id: string
+  date: string
+  content: string
+  createdAt: string
+}
+export type CalendarNoteDraft = Omit<CalendarNote, 'id' | 'createdAt'>

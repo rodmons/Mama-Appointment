@@ -5,8 +5,8 @@ A private appointment, provider, and medication organizer built with React, Vite
 ## How access works
 
 - Everyone must sign in.
-- A `viewer` can see appointments, providers, and medications, and can add or edit any blood pressure reading in BP at any time.
-- An `admin` starts in Mom Mode and must turn on Admin Mode to change appointments, providers, or medications. Logging BP does not require Admin Mode.
+- A `viewer` can see appointments, providers, and medications, add calendar notes, and add or edit any blood pressure reading in BP at any time.
+- An `admin` starts in Mom Mode and must turn on Admin Mode to change appointments, providers, or medications. Logging BP and adding calendar notes do not require Admin Mode.
 - Supabase Row Level Security (RLS) enforces these permissions in the database. Hiding buttons alone is not the security system.
 
 Never put a Supabase `service_role` or secret key in this app, GitHub, or a browser. The app only needs the project URL and publishable key. The publishable key is designed to be visible; RLS protects the data.
@@ -93,6 +93,18 @@ In Demo Mode, BP starts empty and saves only to this browser; Reset Demo clears 
 After the original BP migration, run **[`supabase/migrations/20261023120000_blood_pressure_editing.sql`](supabase/migrations/20261023120000_blood_pressure_editing.sql)** in **Supabase → SQL Editor**. It is safe to rerun. All approved viewers and admins can edit any existing reading, including another user's reading, without Admin Mode. Only the five reading fields can change; the original ID, author, and creation timestamp remain protected. Existing readings are preserved.
 
 The header automatically shows average systolic, diastolic, and pulse across every logged reading, rounded to at most one decimal place, with the total log count. BP fetches all result pages to include logs beyond Supabase's default row limit. Averages recalculate after adds and edits and require no SQL calculation or stored average fields.
+
+## Calendar notes database update
+
+Run **[`supabase/migrations/20261028090000_calendar_notes.sql`](supabase/migrations/20261028090000_calendar_notes.sql)** in **Supabase → SQL Editor**, then reopen Calendar. It requires the existing `app_users` table and private access setup and is safe to rerun.
+
+Approved viewers and admins can read and add notes without Admin Mode. The database assigns each note's author and creation timestamp. Signed-out and unapproved accounts cannot access notes. Notes are stored separately from appointments and can be added to any date.
+
+Select a day and use the sticky orange **Add note** button beside Selected day. Save the note in the centered dialog; it appears below that day's appointments, or on its own when there are no appointments. A small orange dot marks every date with a note. Today alone uses a bold number at twice the normal size, with no circle; the underline marks the selected date without changing its font.
+
+In Demo Mode, notes start empty and save only in this browser; Reset Demo clears them. With Supabase configured, notes use the authenticated database. Missing SQL shows a retryable notes error while appointments remain available.
+
+After the original notes migration, run **[`supabase/migrations/20261028100000_calendar_note_editing.sql`](supabase/migrations/20261028100000_calendar_note_editing.sql)** in **Supabase → SQL Editor** to enable editing and deletion. It is safe to rerun. Only accounts with the `admin` role can edit or delete notes in Supabase. The app shows **Edit** and a trash icon on each note only while Admin Mode is on. Edit reopens the same note dialog with its existing text. The trash icon opens **Delete note?** with **Yes / No**; only Yes deletes the record. Editing preserves the original date, author, and creation timestamp. Deleting the last note on a day removes its orange marker. Viewers can still add notes.
 
 ## Checks
 
