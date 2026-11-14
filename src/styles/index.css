@@ -236,6 +236,8 @@ main { width: min(100% - 32px, 780px); margin: 0 auto; padding: 30px 0 48px; }
 .edit-doctor svg { width: 18px; }
 
 .settings-card { background: var(--surface); border: 1px solid var(--border); border-radius: 24px; padding: 22px; margin-bottom: 14px; }
+.account-planner-button { width: 100%; min-height: 52px; margin: 0 0 22px; border: 1px solid #e8c5ad; border-radius: 16px; background: var(--warm-soft); color: #754a2f; font-weight: 800; font-size: 16px; }
+.account-planner-button:hover { background: #efd5c3; }
 .settings-icon { width: 48px; height: 48px; border-radius: 15px; display: grid; place-items: center; background: var(--accent-soft); color: var(--accent); margin-bottom: 14px; }
 .settings-copy h2 { margin-bottom: 6px; }
 .settings-copy p { color: var(--muted); font-size: 15px; }
@@ -254,6 +256,26 @@ main { width: min(100% - 32px, 780px); margin: 0 auto; padding: 30px 0 48px; }
 .privacy-note h2 { font-size: 17px; margin-bottom: 4px; }
 .privacy-note p { color: #47625d; font-size: 13px; margin: 0; }
 .version-note { text-align: center; color: #8b9592; font-size: 12px; margin-top: 24px; }
+
+.time-planner { display: grid; gap: 18px; }
+.planner-fields { gap: 13px; }
+.planner-field { min-width: 0; margin: 0; padding: 0; border: 0; color: #304843; font-size: 14px; font-weight: 700; }
+.planner-field legend { padding: 0; }
+.planner-time-inputs, .planner-duration-inputs { display: grid; align-items: center; gap: 8px; margin-top: 7px; }
+.planner-time-inputs { grid-template-columns: minmax(70px, 1fr) auto minmax(70px, 1fr) minmax(80px, .9fr); }
+.planner-duration-inputs { grid-template-columns: minmax(0, 1fr) 92px; }
+.planner-time-inputs label { min-width: 0; }
+.planner-time-inputs select, .planner-duration-inputs input, .planner-duration-inputs select { width: 100%; min-width: 0; min-height: 48px; margin: 0; padding: 10px 12px; border: 1px solid #d8d8d2; border-radius: 12px; background: #fff; color: var(--ink); }
+.planner-time-inputs select { font-variant-numeric: tabular-nums; }
+.planner-duration-inputs input[aria-invalid='true'] { border-color: #bd5a52; background: #fff8f7; }
+.planner-result { padding: 22px 18px; border-radius: 20px; background: var(--accent); color: #fff; text-align: center; }
+.planner-result p { margin: 0 0 4px; color: #d7e8e4; font-size: 13px; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; }
+.planner-result strong { display: block; font-size: clamp(3rem, 14vw, 4.7rem); line-height: 1; letter-spacing: -.055em; font-variant-numeric: tabular-nums; }
+.planner-result span { display: block; margin-top: 8px; color: #d7e8e4; font-size: 13px; font-weight: 700; }
+.planner-ready { margin: -3px 0 0; text-align: center; color: var(--muted); font-size: 14px; }
+.planner-ready strong { color: var(--ink); font-size: 17px; }
+.planner-ready span { white-space: nowrap; }
+.planner-reset { justify-self: center; min-height: 44px; padding: 0 8px; border: 0; background: transparent; color: var(--accent); font-size: 13px; font-weight: 800; text-decoration: underline; text-underline-offset: 3px; }
 
 .empty-state { padding: 34px 22px; border: 1px dashed #d6d5ce; background: rgba(255,255,255,.46); border-radius: 22px; text-align: center; }
 .empty-icon { display: grid; place-items: center; width: 45px; height: 45px; border-radius: 50%; margin: 0 auto 13px; background: var(--accent-soft); color: var(--accent); font-weight: 800; }

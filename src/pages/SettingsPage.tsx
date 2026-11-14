@@ -1,10 +1,15 @@
+import { useState } from 'react'
 import type { AppRole } from '../types'
 import { Icon } from '../components/Icon'
 import { PageIntro } from '../components/Layout'
+import { Modal } from '../components/Forms'
+import { TimePlanner } from '../components/TimePlanner'
 
 export function SettingsPage({ configured, role, userEmail, onLogout, onResetDemo }: { configured: boolean; role: AppRole | null; userEmail: string; onLogout: () => Promise<void>; onResetDemo: () => void }) {
+  const [plannerOpen, setPlannerOpen] = useState(false)
   const canAdmin = role === 'admin' || !configured
   return <div>
+    <button className="account-planner-button" type="button" onClick={() => setPlannerOpen(true)}>Time Planner</button>
     <PageIntro eyebrow="Private account" title="Account" text="Your access and safety controls." />
     <section className="settings-card">
       <div className="settings-icon"><Icon name={canAdmin ? 'lock' : 'user'} /></div><div className="settings-copy"><h2>{configured ? role === 'admin' ? 'Administrator' : 'Mom Mode viewer' : 'Demo access'}</h2><p>{configured ? userEmail : 'Supabase is not connected yet. Changes stay in this browser.'}</p></div>
@@ -14,5 +19,6 @@ export function SettingsPage({ configured, role, userEmail, onLogout, onResetDem
     {!configured && <section className="settings-card"><div className="settings-copy"><h2>Demo data</h2><p>Appointments and changes are saved only in this browser. Reset restores the original examples.</p></div><button className="button secondary full" type="button" onClick={onResetDemo}>Reset demo data</button></section>}
     <section className="privacy-note"><Icon name="check" /><div><h2>Private by design</h2><p>Only approved Supabase accounts can read this calendar. Continue keeping detailed medical records and identification numbers out of the app.</p></div></section>
     <p className="version-note">Mama Mona Appointments · Version 1.1</p>
+    {plannerOpen && <Modal title="Time Planner" subtitle="Plan backward from the appointment time." onClose={() => setPlannerOpen(false)} centered><TimePlanner /></Modal>}
   </div>
 }

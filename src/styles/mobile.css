@@ -108,6 +108,7 @@
   .detail-time { font-size: 21px; }
   .detail-hero-contact { margin-top: 14px; padding-top: 12px; }
   .detail-card, .settings-card { padding: 14px; border-radius: 12px; }
+  .account-planner-button { min-height: 48px; margin-bottom: 16px; border-radius: 12px; }
   .detail-row { grid-template-columns: 34px minmax(0, 1fr); gap: 10px; }
   .detail-icon { width: 34px; height: 36px; border-radius: 10px; }
   .detail-row strong { font-size: 16px; }
@@ -128,6 +129,14 @@
   .modal-header h2 { font-size: 20px; }
   .modal-header p { font-size: 12px; }
   .modal-body { padding: 14px 14px max(20px, env(safe-area-inset-bottom)); }
+  .time-planner { gap: 14px; }
+  .planner-fields { gap: 11px; }
+  .planner-time-inputs, .planner-duration-inputs { margin-top: 5px; }
+  .planner-time-inputs { grid-template-columns: minmax(58px, 1fr) auto minmax(58px, 1fr) minmax(72px, .9fr); gap: 5px; }
+  .planner-duration-inputs { grid-template-columns: minmax(0, 1fr) 82px; gap: 6px; }
+  .planner-time-inputs select, .planner-duration-inputs input, .planner-duration-inputs select { min-height: 44px; padding: 8px 9px; border-radius: 10px; font-size: 16px; }
+  .planner-result { padding: 18px 12px; border-radius: 14px; }
+  .planner-result strong { font-size: clamp(2.9rem, 16vw, 4rem); }
   .app-form, .medication-fields { gap: 13px; }
   .app-form label, .bring-field legend, .doctor-field > label { font-size: 13px; }
   .app-form input, .app-form select, .app-form textarea, .doctor-field > input { min-height: 44px; padding: 10px 12px; border-radius: 10px; margin-top: 5px; }
